@@ -16,7 +16,9 @@
            05 HEROES-R-ID             PIC 9(02) VALUE ZERO.
            05 HEROES-R-FUE            PIC 9(02) VALUE ZERO.
            05 HEROES-R-AGI            PIC 9(02) VALUE ZERO.
-
+           05 HEROES-R-LVL            PIC 9(02) VALUE ZERO.
+           05 HEROES-R-HP             PIC 9(02) VALUE ZERO.
+           05 HEROES-R-PROF           PIC 9(02) VALUE ZERO.
        WORKING-STORAGE SECTION.
        01 WS-CONSTANTS.
            05 WS-VALID-OPTION  PIC X(28) VALUES ALL SPACES.

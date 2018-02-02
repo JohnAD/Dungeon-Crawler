@@ -1,0 +1,4 @@
+# Executable file
+*.exe
+
+*DS_Store

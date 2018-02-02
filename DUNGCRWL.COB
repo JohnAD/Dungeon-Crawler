@@ -47,8 +47,6 @@
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(09) VALUE "0- Salir.".
-       01 WS-HEROES.
-           05 WS-ID                PIC 9(02) VALUE ZERO.
        01 WS-HEROES-FILE.
            05 WS-HEROES-FS         PIC X(02) VALUE ZEROES.
                88 WS-H-FS-OK         VALUE "00".

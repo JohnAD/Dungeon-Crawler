@@ -180,6 +180,7 @@
       ******************************************************************
        DISPLAY-MODIFY-HERO.
            DISPLAY "MODIFICAR HEROE".
+           CALL "MOD-HEROE" USING WS-HEROES-R(WS-H-R-CURRENT).
       ******************************************************************
        PLAY.
            DISPLAY "A LA BATALLA!".

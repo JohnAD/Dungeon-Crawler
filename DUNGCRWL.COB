@@ -54,7 +54,7 @@
                88 WS-H-FS-OK         VALUE "00".
                88 WS-H-FS-EOF        VALUE HIGH-VALUE.
            05 WS-HEROES-REG.
-               10 WS-H-R-LONG      PIC 9(01) VALUE ZERO.
+               10 WS-H-R-LENGTH    PIC 9(01) VALUE ZERO.
                10 WS-H-R-INDEX     PIC 9(01) VALUE ZERO.
                10 WS-HEROES-R OCCURS 7 TIMES.
                    15 WS-H-R-ID                PIC 9(02) VALUE ZERO.
@@ -95,8 +95,10 @@
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(09) VALUE "0- Salir".
                10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(24)
-                 VALUE "Escoge un heroe (1 - 7):".
+               10 FILLER           PIC X(21)
+                 VALUE "Escoge un heroe (1 - ".
+               10 WS-HMF-LENGTH    PIC 9(01).
+               10 FILLER           PIC X(02) VALUE "):".
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
@@ -149,7 +151,7 @@
                MOVE WS-H-R-HP(WS-H-R-INDEX) TO WS-HMC-HP
                MOVE WS-H-R-PROFESSION(WS-H-R-INDEX) TO WS-HMC-PROFESSION
                DISPLAY WS-HEROES-MENU-CONTENT
-               ADD 1 TO WS-H-R-LONG
+               ADD 1 TO WS-H-R-LENGTH
            END-READ.
       ******************************************************************
        DISPLAY-HEROES-MENU.
@@ -165,6 +167,7 @@
              UNTIL WS-H-FS-EOF OR WS-H-R-INDEX > 7.
       ******************************************************************
        DISPLAY-HEROES-MENU-FOOTER.
+           MOVE WS-H-R-LENGTH TO WS-HMF-LENGTH.
            DISPLAY WS-HEROES-MENU-FOOTER.
            ACCEPT WS-OPTION.
       ******************************************************************

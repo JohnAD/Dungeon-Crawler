@@ -54,6 +54,7 @@
            05 WS-HEROES-REG.
                10 WS-H-R-LENGTH    PIC 9(01) VALUE ZERO.
                10 WS-H-R-INDEX     PIC 9(01) VALUE ZERO.
+               10 WS-H-R-CURRENT   PIC 9(01) VALUE ZERO.
                10 WS-HEROES-R OCCURS 7 TIMES.
                    15 WS-H-R-ID                PIC 9(02) VALUE ZERO.
                    15 WS-H-R-STRENGTH          PIC 9(02) VALUE ZERO.
@@ -62,8 +63,9 @@
                    15 WS-H-R-HP                PIC 9(02) VALUE ZERO.
                    15 WS-H-R-PROFESSION        PIC 9(02) VALUE ZERO.
        01 WS-HEROES-MENU.
-           05 WS-OPTION            PIC X(01) VALUE SPACE.
-               88 WS-OP-EXIT         VALUE "0".
+           05 WS-H-OPTION            PIC X(01) VALUE SPACE.
+               88 WS-H-OP-CONTINUE     VALUE SPACE.
+               88 WS-H-OP-EXIT         VALUE "0".
            05 WS-HEROES-MENU-TITLE.
                10 WS-HM-HEADING    PIC X(17)
                  VALUE "LISTADO DE HEROES".
@@ -113,6 +115,7 @@
            EVALUATE TRUE
            WHEN WS-MM-OP-SELECT
                PERFORM DISPLAY-SELECT-HERO
+      *         DISPLAY "SELECTED HERO: "WS-H-R-CURRENT
            WHEN WS-MM-OP-MODIFY
                PERFORM DISPLAY-MODIFY-HERO
            WHEN WS-MM-OP-PLAY
@@ -132,7 +135,10 @@
            IF NOT WS-H-FS-OK THEN
                PERFORM ERROR-OPENING-HEROES
            ELSE
-               PERFORM DISPLAY-HEROES-MENU UNTIL WS-OP-EXIT
+               PERFORM DISPLAY-HEROES-MENU UNTIL WS-H-OP-EXIT
+                 OR (1 <= WS-H-OPTION AND WS-H-OPTION <= WS-H-R-LENGTH)
+               MOVE WS-H-OPTION TO WS-H-R-CURRENT
+               SET WS-H-OP-CONTINUE TO TRUE
                CLOSE HEROES-FILE
            END-IF.
       ******************************************************************
@@ -156,6 +162,7 @@
            PERFORM DISPLAY-HEROES-MENU-TITLE.
            PERFORM DISPLAY-HEROES-MENU-CONTENT.
            PERFORM DISPLAY-HEROES-MENU-FOOTER.
+           ACCEPT WS-H-OPTION.
       ******************************************************************
        DISPLAY-HEROES-MENU-TITLE.
            DISPLAY WS-HEROES-MENU-TITLE.
@@ -167,7 +174,6 @@
        DISPLAY-HEROES-MENU-FOOTER.
            MOVE WS-H-R-LENGTH TO WS-HMF-LENGTH.
            DISPLAY WS-HEROES-MENU-FOOTER.
-           ACCEPT WS-OPTION.
       ******************************************************************
        ERROR-OPENING-HEROES.
            DISPLAY "["WS-GAME-NAME"] Fichero HEROE no disponible.".

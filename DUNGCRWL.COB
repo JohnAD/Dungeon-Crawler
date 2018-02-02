@@ -1,7 +1,7 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. DUNGCRWL.
       ******************************************************************
-      * JUEGO: DUGEON CRAWLER                                          *
+      * JUEGO: DUNGEON CRAWLER                                         *
       ******************************************************************
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.

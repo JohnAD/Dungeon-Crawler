@@ -225,7 +225,11 @@
            DISPLAY "["WS-GAME-NAME"] Fichero HEROES no disponible.".
       ******************************************************************
        DISPLAY-MODIFY-HERO.
-           DISPLAY "MODIFICAR HEROE".
+           IF WS-H-R-CURRENT > 0 THEN
+               DISPLAY "MODIFICAR HEROE"
+           ELSE
+               DISPLAY "PRIMERO DEBES SELECCIONAR UN HEROE!"
+           END-IF.
       ******************************************************************
        PLAY.
            DISPLAY "A LA BATALLA!".

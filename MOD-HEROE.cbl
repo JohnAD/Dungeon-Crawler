@@ -65,35 +65,35 @@
        DISPLAY-HEROES-MENU.
            EVALUATE TRUE
                WHEN WS-H-OP-STRENGTH
-                   DISPLAY "[" WS-GAME-NAME "]"
-                     " Selecciona el nuevo valor de Fuerza: "
-                   DISPLAY "Valor antiguo: " LS-H-STRENGTH
+                   DISPLAY "[" WS-GAME-NAME "] "
+                     "Selecciona el nuevo valor de Fuerza: "
+                   DISPLAY "- Valor antiguo: " LS-H-STRENGTH
                    ACCEPT NEW-VALUE
-                   DISPLAY "Nuevo valor: " NEW-VALUE
+                   DISPLAY "- Nuevo valor: " NEW-VALUE
                    SET LS-H-STRENGTH TO NEW-VALUE
                    PERFORM DISPLAY-H-ALL-CONTENTS
                WHEN WS-H-OP-AGILITY
-                   DISPLAY "[" WS-GAME-NAME "]"
-                     " Selecciona el nuevo valor de Agilidad: "
-                   DISPLAY "Valor antiguo: " LS-H-AGILITY
+                   DISPLAY "[" WS-GAME-NAME "] "
+                     "Selecciona el nuevo valor de Agilidad: "
+                   DISPLAY "- Valor antiguo: " LS-H-AGILITY
                    ACCEPT NEW-VALUE
-                   DISPLAY "Nuevo valor: " NEW-VALUE
+                   DISPLAY "- Nuevo valor: " NEW-VALUE
                    SET LS-H-AGILITY TO NEW-VALUE
                    PERFORM DISPLAY-H-ALL-CONTENTS
                WHEN WS-H-OP-LEVEL
-                   DISPLAY "[" WS-GAME-NAME "]"
-                     " Selecciona el nuevo valor de Nivel: "
-                   DISPLAY "Valor antiguo: " LS-H-LEVEL
+                   DISPLAY "[" WS-GAME-NAME "] "
+                     "Selecciona el nuevo valor de Nivel: "
+                   DISPLAY "- Valor antiguo: " LS-H-LEVEL
                    ACCEPT NEW-VALUE
-                   DISPLAY "Nuevo valor: " NEW-VALUE
+                   DISPLAY "- Nuevo valor: " NEW-VALUE
                    SET LS-H-LEVEL TO NEW-VALUE
                    PERFORM DISPLAY-H-ALL-CONTENTS
                WHEN WS-H-OP-HP
-                   DISPLAY "[" WS-GAME-NAME "]"
-                     " Selecciona el nuevo valor de Vida: "
-                   DISPLAY "Valor antiguo: " LS-H-HP
+                   DISPLAY "[" WS-GAME-NAME "] "
+                     "Selecciona el nuevo valor de Vida: "
+                   DISPLAY "- Valor antiguo: " LS-H-HP
                    ACCEPT NEW-VALUE
-                   DISPLAY "Nuevo valor: " NEW-VALUE
+                   DISPLAY "- Nuevo valor: " NEW-VALUE
                    SET LS-H-HP TO NEW-VALUE
                    PERFORM DISPLAY-H-ALL-CONTENTS
                WHEN WS-H-OP-EXIT

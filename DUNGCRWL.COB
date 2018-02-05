@@ -130,9 +130,44 @@
                  VALUE "Escoge un heroe (1 - ".
                10 WS-HMF-LENGTH    PIC 9(01).
                10 FILLER           PIC X(02) VALUE "):".
+       77 OPCION PIC X VALUE SPACES.
+       77 PAUSAR PIC X VALUE SPACES.
       ******************************************************************
+       SCREEN SECTION.
+       01 INTRO.
+           03 LINE 04 COL 10 VALUE "______".
+           03 LINE 05 COL 10 VALUE "|  _  \".
+           03 LINE 06 COL 10 VALUE
+             "| | | |_   _ _ __   __ _  ___  ___  _ __".
+           03 LINE 07 COL 10 VALUE
+             "| | | | | | | '_ \ / _` |/ _ \/ _ \| '_ \".
+           03 LINE 08 COL 10 VALUE
+             "| |/ /| |_| | | | | (_| |  __/ (_) | | | |".
+           03 LINE 09 COL 10 VALUE
+             "|___/  \__,_|_| |_|\__, |\___|\___/|_| |_|".
+           03 LINE 10 COL 10 VALUE "                    __/ |".
+           03 LINE 11 COL 10 VALUE "                   |___/".
+           03 LINE 12 COL 10 VALUE "   _____                    _".
+           03 LINE 13 COL 10 VALUE "  /  __ \                  | |".
+           03 LINE 14 COL 10 VALUE
+             "  | /  \/_ __ __ ___      _| | ___ _ __".
+           03 LINE 15 COL 10 VALUE
+             "  | |   | '__/ _` \ \ /\ / / |/ _ \ '__|".
+           03 LINE 16 COL 10 VALUE
+            "  | \__/\ | | (_| |\ V  V /| |  __/ |".
+           03 LINE 17 COL 10 VALUE
+             "   \____/_|  \__,_| \_/\_/ |_|\___|_|".
+           03 LINE 21 COL 40 VALUE "Made by Juan Ramon, Juanjo Sanchez".
+           03 LINE 25 COL 20 VALUE
+             "PULSE CUALQUIER TECLA PARA CONTINUAR...".
+           03 PIC X USING OPCION.
+       01 LIMPIAR-PANTALLA.
+           03 BLANK SCREEN.
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
+           DISPLAY INTRO.
+           ACCEPT INTRO.
+           DISPLAY LIMPIAR-PANTALLA.
            SET WS-RESET-VALID-OPTION TO TRUE
            PERFORM SET-MAIN-MENU-ERROR
            PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT

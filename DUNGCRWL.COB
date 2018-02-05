@@ -179,7 +179,6 @@
            DISPLAY "["WS-GAME-NAME"] Fichero HEROE no disponible.".
       ******************************************************************
        DISPLAY-MODIFY-HERO.
-           DISPLAY "MODIFICAR HEROE".
            CALL "MOD-HEROE" USING WS-HEROES-R(WS-H-R-CURRENT).
       ******************************************************************
        PLAY.

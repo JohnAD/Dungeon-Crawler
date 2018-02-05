@@ -9,6 +9,9 @@
            SELECT HEROES-FILE ASSIGN TO "HEROES.TXT"
              FILE STATUS IS WS-HEROES-FS
              ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT MONSTERS-FILE ASSIGN TO "DUNGEON.TXT"
+             FILE STATUS IS WS-MONSTERS-FS
+             ORGANIZATION IS LINE SEQUENTIAL.
        DATA DIVISION.
        FILE SECTION.
        FD HEROES-FILE.
@@ -19,9 +22,20 @@
            05 HEROES-R-LEVEL           PIC 9(02) VALUE ZERO.
            05 HEROES-R-HP              PIC 9(02) VALUE ZERO.
            05 HEROES-R-PROFESSION      PIC 9(02) VALUE ZERO.
+       FD MONSTERS-FILE.
+       01 MONSTERS-REG.
+           05 MONSTER-R-ID             PIC 9(02) VALUE ZERO.
+           05 MONSTER-R-STRENGTH       PIC 9(02) VALUE ZERO.
+           05 MONSTER-R-AGILITY        PIC 9(02) VALUE ZERO.
+           05 MONSTER-R-LEVEL          PIC 9(02) VALUE ZERO.
+           05 MONSTER-R-HP             PIC 9(02) VALUE ZERO.
+           05 MONSTER-R-PROFESSION     PIC 9(02) VALUE ZERO.
        WORKING-STORAGE SECTION.
        01 WS-CONSTANTS.
-           05 WS-GAME-NAME PIC X(15)   VALUE "Dungeon Crawler".
+           05 WS-GAME-NAME             PIC X(15)
+                                         VALUE "Dungeon Crawler".
+           05 WS-MAX-HEROES            PIC 9(02) VALUE 7.
+           05 WS-MAX-MONSTERS          PIC 9(02) VALUE 10.
        01 WS-VALID-OPTION  PIC X(28)   VALUES ALL SPACES.
            88 WS-RESET-VALID-OPTION    VALUE ALL SPACES.
            88 WS-INVALID-OPTION
@@ -55,6 +69,7 @@
                10 WS-H-R-LENGTH    PIC 9(01) VALUE ZERO.
                10 WS-H-R-INDEX     PIC 9(01) VALUE ZERO.
                10 WS-H-R-CURRENT   PIC 9(01) VALUE ZERO.
+      * WS-HEROES-R OCCURS **WS-MAX-HEROES** TIMES
                10 WS-HEROES-R OCCURS 7 TIMES.
                    15 WS-H-R-ID                PIC 9(02) VALUE ZERO.
                    15 WS-H-R-STRENGTH          PIC 9(02) VALUE ZERO.
@@ -62,6 +77,22 @@
                    15 WS-H-R-LEVEL             PIC 9(02) VALUE ZERO.
                    15 WS-H-R-HP                PIC 9(02) VALUE ZERO.
                    15 WS-H-R-PROFESSION        PIC 9(02) VALUE ZERO.
+       01 WS-MONSTERS-FILE.
+           05 WS-MONSTERS-FS       PIC X(02) VALUE ZEROES.
+               88 WS-M-FS-OK       VALUE "00".
+               88 WS-M-FS-EOF      VALUE HIGH-VALUE.
+           05 WS-MONSTERS-REG.
+               10 WS-M-R-LENGTH    PIC 9(01) VALUE ZERO.
+               10 WS-M-R-INDEX     PIC 9(01) VALUE ZERO.
+               10 WS-M-R-CURRENT   PIC 9(01) VALUE ZERO.
+      * WS-MONSTERS-R OCCURS **WS-MAX-MONSTERS** TIMES
+               10 WS-MONSTERS-R OCCURS 7 TIMES.
+                   15 WS-M-R-ID                PIC 9(02) VALUE ZERO.
+                   15 WS-M-R-STRENGTH          PIC 9(02) VALUE ZERO.
+                   15 WS-M-R-AGILITY           PIC 9(02) VALUE ZERO.
+                   15 WS-M-R-LEVEL             PIC 9(02) VALUE ZERO.
+                   15 WS-M-R-HP                PIC 9(02) VALUE ZERO.
+                   15 WS-M-R-PROFESSION        PIC 9(02) VALUE ZERO.
        01 WS-HEROES-MENU.
            05 WS-H-OPTION            PIC X(01) VALUE SPACE.
                88 WS-H-OP-CONTINUE     VALUE SPACE.
@@ -169,7 +200,7 @@
       ******************************************************************
        DISPLAY-HEROES-MENU-CONTENT.
            PERFORM READ-FILE-HEROES VARYING WS-H-R-INDEX FROM 1 BY 1
-             UNTIL WS-H-FS-EOF OR WS-H-R-INDEX > 7.
+             UNTIL WS-H-FS-EOF OR WS-H-R-INDEX > WS-MAX-HEROES.
       ******************************************************************
        DISPLAY-HEROES-MENU-FOOTER.
            MOVE WS-H-R-LENGTH TO WS-HMF-LENGTH.

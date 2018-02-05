@@ -86,7 +86,7 @@
                10 WS-M-R-INDEX     PIC 9(01) VALUE ZERO.
                10 WS-M-R-CURRENT   PIC 9(01) VALUE ZERO.
       * WS-MONSTERS-R OCCURS **WS-MAX-MONSTERS** TIMES
-               10 WS-MONSTERS-R OCCURS 7 TIMES.
+               10 WS-MONSTERS-R OCCURS 10 TIMES.
                    15 WS-M-R-ID                PIC 9(02) VALUE ZERO.
                    15 WS-M-R-STRENGTH          PIC 9(02) VALUE ZERO.
                    15 WS-M-R-AGILITY           PIC 9(02) VALUE ZERO.
@@ -133,9 +133,13 @@
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-           SET WS-RESET-VALID-OPTION TO TRUE.
-           PERFORM SET-MAIN-MENU-ERROR.
-           PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT.
+           PERFORM INIT--WS-MONSTERS-R--CONTENT.
+           IF WS-M-FS-OK THEN
+               PERFORM DISPLAY-MONSTERS
+               SET WS-RESET-VALID-OPTION TO TRUE
+               PERFORM SET-MAIN-MENU-ERROR
+               PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT
+           END-IF.
 
            GO TO STOP-RUN.
       ******************************************************************
@@ -207,7 +211,7 @@
            DISPLAY WS-HEROES-MENU-FOOTER.
       ******************************************************************
        ERROR-OPENING-HEROES.
-           DISPLAY "["WS-GAME-NAME"] Fichero HEROE no disponible.".
+           DISPLAY "["WS-GAME-NAME"] Fichero HEROES no disponible.".
       ******************************************************************
        DISPLAY-MODIFY-HERO.
            DISPLAY "MODIFICAR HEROE".
@@ -217,6 +221,41 @@
       ******************************************************************
        EXIT-GAME.
            DISPLAY "SALIR - [GUARDAR CAMBIOS]".
+      ******************************************************************
+      * == [INIT--WS-MONSTERS-R--CONTENT] ========================BEGIN=
+       INIT--WS-MONSTERS-R--CONTENT.
+           OPEN INPUT MONSTERS-FILE.
+           IF NOT WS-M-FS-OK THEN
+               PERFORM ERROR-OPENING-MONSTERS
+           ELSE
+               PERFORM SET--WS-MONSTERS-R--CONTENT
+               CLOSE MONSTERS-FILE
+           END-IF.
+      ******************************************************************
+       SET--WS-MONSTERS-R--CONTENT.
+           PERFORM READ-FILE-MONSTERS VARYING WS-M-R-INDEX FROM 1 BY 1
+             UNTIL WS-M-FS-EOF OR WS-M-R-INDEX > WS-MAX-MONSTERS.
+      ******************************************************************
+       READ-FILE-MONSTERS.
+           READ MONSTERS-FILE INTO WS-MONSTERS-R(WS-M-R-INDEX)
+           AT END
+               SET WS-M-FS-EOF TO TRUE
+           NOT AT END
+               ADD 1 TO WS-M-R-LENGTH
+           END-READ.
+      ******************************************************************
+       ERROR-OPENING-MONSTERS.
+           DISPLAY "["WS-GAME-NAME"] Fichero MONSTERS no disponible.".
+      ******************************************************************
+       DISPLAY-MONSTERS.
+           DISPLAY "LOADED MONSTERS FILE:"
+           DISPLAY "--------"
+           PERFORM VARYING WS-M-R-INDEX FROM 1 BY 1
+               UNTIL WS-M-R-INDEX > WS-M-R-LENGTH
+               DISPLAY WS-MONSTERS-R(WS-M-R-INDEX)
+           END-PERFORM
+           DISPLAY "--------".
+      * == [INIT--WS-MONSTERS-R--CONTENT] ==========================END=
       ******************************************************************
        STOP-RUN.
            STOP RUN.

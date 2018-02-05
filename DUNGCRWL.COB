@@ -75,7 +75,7 @@
                    15 WS-H-R-STRENGTH          PIC 9(02) VALUE ZERO.
                    15 WS-H-R-AGILITY           PIC 9(02) VALUE ZERO.
                    15 WS-H-R-LEVEL             PIC 9(02) VALUE ZERO.
-                   15 WS-H-R-HP                PIC 9(02) VALUE ZERO.
+                   15 WS-H-R-HP                PIC S9(02) VALUE ZERO.
                    15 WS-H-R-PROFESSION        PIC 9(02) VALUE ZERO.
        01 WS-MONSTERS-FILE.
            05 WS-MONSTERS-FS       PIC X(02) VALUE ZEROES.
@@ -91,7 +91,7 @@
                    15 WS-M-R-STRENGTH          PIC 9(02) VALUE ZERO.
                    15 WS-M-R-AGILITY           PIC 9(02) VALUE ZERO.
                    15 WS-M-R-LEVEL             PIC 9(02) VALUE ZERO.
-                   15 WS-M-R-HP                PIC 9(02) VALUE ZERO.
+                   15 WS-M-R-HP                PIC S9(02) VALUE ZERO.
                    15 WS-M-R-PROFESSION        PIC 9(02) VALUE ZERO.
        01 WS-HEROES-MENU.
            05 WS-H-OPTION            PIC X(01) VALUE SPACE.
@@ -229,6 +229,56 @@
       ******************************************************************
        PLAY.
            DISPLAY "A LA BATALLA!".
+           IF WS-H-R-CURRENT > 0 THEN
+               IF WS-M-R-LENGTH > 0 THEN
+                   MOVE 1 TO WS-M-R-CURRENT
+                   PERFORM UNTIL
+                     NOT (WS-H-R-HP(WS-H-R-CURRENT) > 0
+                     AND WS-M-R-CURRENT <= WS-M-R-LENGTH)
+                       PERFORM FIGHT-AGAINST-MONSTER
+                       ADD 1 TO WS-M-R-CURRENT
+                   END-PERFORM
+                   IF WS-H-R-HP(WS-H-R-CURRENT) > 0 THEN
+                       DISPLAY "HAS GANADO !!"
+                   ELSE
+                       DISPLAY "HAS PERDIDO."
+                   END-IF
+               ELSE
+                   DISPLAY "NO HAY MONSTRUOS CONTRA LOS QUE LUCHAR!"
+               END-IF
+           ELSE
+               DISPLAY "PRIMERO SELECCIONA UN HEROE!"
+           END-IF.
+      ******************************************************************
+       FIGHT-AGAINST-MONSTER.
+           PERFORM UNTIL WS-H-R-HP(WS-H-R-CURRENT) < 0
+             OR WS-M-R-HP(WS-M-R-CURRENT) < 0
+           DISPLAY "WS-H-R-HP("WS-H-R-CURRENT"): "
+             WS-H-R-HP(WS-H-R-CURRENT)
+           DISPLAY "WS-M-R-HP("WS-M-R-CURRENT"): "
+             WS-M-R-HP(WS-M-R-CURRENT)
+               DISPLAY "** LUCHAS CONTRA: "
+                   WS-M-R-PROFESSION(WS-M-R-CURRENT)" ** "
+                   " CON FUERZA: "WS-M-R-STRENGTH(WS-M-R-CURRENT)
+               DISPLAY "TIENES HP: "WS-H-R-HP(WS-H-R-CURRENT)
+                   " CON FUERZA: "
+                   WS-H-R-STRENGTH(WS-H-R-CURRENT)
+
+               IF WS-H-R-STRENGTH(WS-H-R-CURRENT)
+                   > WS-M-R-STRENGTH(WS-M-R-CURRENT) THEN
+                   COMPUTE WS-M-R-HP(WS-M-R-CURRENT) =
+                       WS-M-R-HP(WS-M-R-CURRENT)
+                       - WS-H-R-STRENGTH(WS-H-R-CURRENT)
+                   DISPLAY "HAS HERIDO AL MONSTRUO, TIENE HP: "
+                       WS-M-R-HP(WS-M-R-CURRENT)
+               ELSE
+                   COMPUTE WS-H-R-HP(WS-H-R-CURRENT) =
+                       WS-H-R-HP(WS-H-R-CURRENT)
+                       - WS-M-R-STRENGTH(WS-M-R-CURRENT)
+                   DISPLAY "TE HA HERIDO EL MONSTRUO, TIENES HP: "
+                       WS-H-R-HP(WS-H-R-CURRENT)
+               END-IF
+           END-PERFORM.
       ******************************************************************
        EXIT-GAME.
            DISPLAY "SALIR - [GUARDAR CAMBIOS]".

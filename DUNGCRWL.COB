@@ -143,6 +143,17 @@
 
            GO TO STOP-RUN.
       ******************************************************************
+       DISPLAY-MONSTERS.
+           DISPLAY "LOADED MONSTERS FILE:"
+           DISPLAY "--------"
+           PERFORM VARYING WS-M-R-INDEX FROM 1 BY 1
+               UNTIL WS-M-R-INDEX > WS-M-R-LENGTH
+               DISPLAY WS-MONSTERS-R(WS-M-R-INDEX)
+           END-PERFORM
+           DISPLAY "--------".
+
+      ******************************************************************
+      * == [DISPLAY-MAIN-MENU] ===================================BEGIN=
        DISPLAY-MAIN-MENU.
            DISPLAY WS-MM.
            ACCEPT WS-MM-OPTION.
@@ -221,6 +232,8 @@
       ******************************************************************
        EXIT-GAME.
            DISPLAY "SALIR - [GUARDAR CAMBIOS]".
+      * == [DISPLAY-MAIN-MENU] =====================================END=
+
       ******************************************************************
       * == [INIT--WS-MONSTERS-R--CONTENT] ========================BEGIN=
        INIT--WS-MONSTERS-R--CONTENT.
@@ -246,16 +259,8 @@
       ******************************************************************
        ERROR-OPENING-MONSTERS.
            DISPLAY "["WS-GAME-NAME"] Fichero MONSTERS no disponible.".
-      ******************************************************************
-       DISPLAY-MONSTERS.
-           DISPLAY "LOADED MONSTERS FILE:"
-           DISPLAY "--------"
-           PERFORM VARYING WS-M-R-INDEX FROM 1 BY 1
-               UNTIL WS-M-R-INDEX > WS-M-R-LENGTH
-               DISPLAY WS-MONSTERS-R(WS-M-R-INDEX)
-           END-PERFORM
-           DISPLAY "--------".
       * == [INIT--WS-MONSTERS-R--CONTENT] ==========================END=
+
       ******************************************************************
        STOP-RUN.
            STOP RUN.

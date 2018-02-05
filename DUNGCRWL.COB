@@ -9,6 +9,9 @@
            SELECT HEROES-FILE ASSIGN TO "HEROES.TXT"
              FILE STATUS IS WS-HEROES-FS
              ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT MONSTERS-FILE ASSIGN TO "DUNGEON.TXT"
+             FILE STATUS IS WS-MONSTERS-FS
+             ORGANIZATION IS LINE SEQUENTIAL.
        DATA DIVISION.
        FILE SECTION.
        FD HEROES-FILE.
@@ -19,9 +22,20 @@
            05 HEROES-R-LEVEL           PIC 9(02) VALUE ZERO.
            05 HEROES-R-HP              PIC 9(02) VALUE ZERO.
            05 HEROES-R-PROFESSION      PIC 9(02) VALUE ZERO.
+       FD MONSTERS-FILE.
+       01 MONSTERS-REG.
+           05 MONSTER-R-ID             PIC 9(02) VALUE ZERO.
+           05 MONSTER-R-STRENGTH       PIC 9(02) VALUE ZERO.
+           05 MONSTER-R-AGILITY        PIC 9(02) VALUE ZERO.
+           05 MONSTER-R-LEVEL          PIC 9(02) VALUE ZERO.
+           05 MONSTER-R-HP             PIC 9(02) VALUE ZERO.
+           05 MONSTER-R-PROFESSION     PIC 9(02) VALUE ZERO.
        WORKING-STORAGE SECTION.
        01 WS-CONSTANTS.
-           05 WS-GAME-NAME PIC X(15)   VALUE "Dungeon Crawler".
+           05 WS-GAME-NAME             PIC X(15)
+                                         VALUE "Dungeon Crawler".
+           05 WS-MAX-HEROES            PIC 9(02) VALUE 7.
+           05 WS-MAX-MONSTERS          PIC 9(02) VALUE 10.
        01 WS-VALID-OPTION  PIC X(28)   VALUES ALL SPACES.
            88 WS-RESET-VALID-OPTION    VALUE ALL SPACES.
            88 WS-INVALID-OPTION
@@ -55,13 +69,30 @@
                10 WS-H-R-LENGTH    PIC 9(01) VALUE ZERO.
                10 WS-H-R-INDEX     PIC 9(01) VALUE ZERO.
                10 WS-H-R-CURRENT   PIC 9(01) VALUE ZERO.
+      * WS-HEROES-R OCCURS **WS-MAX-HEROES** TIMES
                10 WS-HEROES-R OCCURS 7 TIMES.
                    15 WS-H-R-ID                PIC 9(02) VALUE ZERO.
                    15 WS-H-R-STRENGTH          PIC 9(02) VALUE ZERO.
                    15 WS-H-R-AGILITY           PIC 9(02) VALUE ZERO.
                    15 WS-H-R-LEVEL             PIC 9(02) VALUE ZERO.
-                   15 WS-H-R-HP                PIC 9(02) VALUE ZERO.
+                   15 WS-H-R-HP                PIC S9(02) VALUE ZERO.
                    15 WS-H-R-PROFESSION        PIC 9(02) VALUE ZERO.
+       01 WS-MONSTERS-FILE.
+           05 WS-MONSTERS-FS       PIC X(02) VALUE ZEROES.
+               88 WS-M-FS-OK       VALUE "00".
+               88 WS-M-FS-EOF      VALUE HIGH-VALUE.
+           05 WS-MONSTERS-REG.
+               10 WS-M-R-LENGTH    PIC 9(01) VALUE ZERO.
+               10 WS-M-R-INDEX     PIC 9(01) VALUE ZERO.
+               10 WS-M-R-CURRENT   PIC 9(01) VALUE ZERO.
+      * WS-MONSTERS-R OCCURS **WS-MAX-MONSTERS** TIMES
+               10 WS-MONSTERS-R OCCURS 10 TIMES.
+                   15 WS-M-R-ID                PIC 9(02) VALUE ZERO.
+                   15 WS-M-R-STRENGTH          PIC 9(02) VALUE ZERO.
+                   15 WS-M-R-AGILITY           PIC 9(02) VALUE ZERO.
+                   15 WS-M-R-LEVEL             PIC 9(02) VALUE ZERO.
+                   15 WS-M-R-HP                PIC S9(02) VALUE ZERO.
+                   15 WS-M-R-PROFESSION        PIC 9(02) VALUE ZERO.
        01 WS-HEROES-MENU.
            05 WS-H-OPTION            PIC X(01) VALUE SPACE.
                88 WS-H-OP-CONTINUE     VALUE SPACE.
@@ -102,12 +133,27 @@
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-           SET WS-RESET-VALID-OPTION TO TRUE.
-           PERFORM SET-MAIN-MENU-ERROR.
-           PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT.
+           PERFORM INIT--WS-MONSTERS-R--CONTENT.
+           IF WS-M-FS-OK THEN
+               PERFORM DISPLAY-MONSTERS
+               SET WS-RESET-VALID-OPTION TO TRUE
+               PERFORM SET-MAIN-MENU-ERROR
+               PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT
+           END-IF.
 
            GO TO STOP-RUN.
       ******************************************************************
+       DISPLAY-MONSTERS.
+           DISPLAY "LOADED MONSTERS FILE:"
+           DISPLAY "--------"
+           PERFORM VARYING WS-M-R-INDEX FROM 1 BY 1
+               UNTIL WS-M-R-INDEX > WS-M-R-LENGTH
+               DISPLAY WS-MONSTERS-R(WS-M-R-INDEX)
+           END-PERFORM
+           DISPLAY "--------".
+
+      ******************************************************************
+      * == [DISPLAY-MAIN-MENU] ===================================BEGIN=
        DISPLAY-MAIN-MENU.
            DISPLAY WS-MM.
            ACCEPT WS-MM-OPTION.
@@ -169,23 +215,106 @@
       ******************************************************************
        DISPLAY-HEROES-MENU-CONTENT.
            PERFORM READ-FILE-HEROES VARYING WS-H-R-INDEX FROM 1 BY 1
-             UNTIL WS-H-FS-EOF OR WS-H-R-INDEX > 7.
+             UNTIL WS-H-FS-EOF OR WS-H-R-INDEX > WS-MAX-HEROES.
       ******************************************************************
        DISPLAY-HEROES-MENU-FOOTER.
            MOVE WS-H-R-LENGTH TO WS-HMF-LENGTH.
            DISPLAY WS-HEROES-MENU-FOOTER.
       ******************************************************************
        ERROR-OPENING-HEROES.
-           DISPLAY "["WS-GAME-NAME"] Fichero HEROE no disponible.".
+           DISPLAY "["WS-GAME-NAME"] Fichero HEROES no disponible.".
       ******************************************************************
        DISPLAY-MODIFY-HERO.
-           CALL "MOD-HEROE" USING WS-HEROES-R(WS-H-R-CURRENT).
+           IF WS-H-R-CURRENT > 0 THEN
+               CALL "MOD-HEROE" USING WS-HEROES-R(WS-H-R-CURRENT)
+           ELSE
+               DISPLAY "PRIMERO DEBES SELECCIONAR UN HEROE!"
+           END-IF.
       ******************************************************************
        PLAY.
            DISPLAY "A LA BATALLA!".
+           IF WS-H-R-CURRENT > 0 THEN
+               IF WS-M-R-LENGTH > 0 THEN
+                   MOVE 1 TO WS-M-R-CURRENT
+                   PERFORM UNTIL
+                     NOT (WS-H-R-HP(WS-H-R-CURRENT) > 0
+                     AND WS-M-R-CURRENT <= WS-M-R-LENGTH)
+                       PERFORM FIGHT-AGAINST-MONSTER
+                       ADD 1 TO WS-M-R-CURRENT
+                   END-PERFORM
+                   IF WS-H-R-HP(WS-H-R-CURRENT) > 0 THEN
+                       DISPLAY "HAS GANADO !!"
+                   ELSE
+                       DISPLAY "HAS PERDIDO."
+                   END-IF
+               ELSE
+                   DISPLAY "NO HAY MONSTRUOS CONTRA LOS QUE LUCHAR!"
+               END-IF
+           ELSE
+               DISPLAY "PRIMERO SELECCIONA UN HEROE!"
+           END-IF.
+      ******************************************************************
+       FIGHT-AGAINST-MONSTER.
+           PERFORM UNTIL WS-H-R-HP(WS-H-R-CURRENT) < 0
+             OR WS-M-R-HP(WS-M-R-CURRENT) < 0
+           DISPLAY "WS-H-R-HP("WS-H-R-CURRENT"): "
+             WS-H-R-HP(WS-H-R-CURRENT)
+           DISPLAY "WS-M-R-HP("WS-M-R-CURRENT"): "
+             WS-M-R-HP(WS-M-R-CURRENT)
+               DISPLAY "** LUCHAS CONTRA: "
+                   WS-M-R-PROFESSION(WS-M-R-CURRENT)" ** "
+                   " CON FUERZA: "WS-M-R-STRENGTH(WS-M-R-CURRENT)
+               DISPLAY "TIENES HP: "WS-H-R-HP(WS-H-R-CURRENT)
+                   " CON FUERZA: "
+                   WS-H-R-STRENGTH(WS-H-R-CURRENT)
+
+               IF WS-H-R-STRENGTH(WS-H-R-CURRENT)
+                   > WS-M-R-STRENGTH(WS-M-R-CURRENT) THEN
+                   COMPUTE WS-M-R-HP(WS-M-R-CURRENT) =
+                       WS-M-R-HP(WS-M-R-CURRENT)
+                       - WS-H-R-STRENGTH(WS-H-R-CURRENT)
+                   DISPLAY "HAS HERIDO AL MONSTRUO, TIENE HP: "
+                       WS-M-R-HP(WS-M-R-CURRENT)
+               ELSE
+                   COMPUTE WS-H-R-HP(WS-H-R-CURRENT) =
+                       WS-H-R-HP(WS-H-R-CURRENT)
+                       - WS-M-R-STRENGTH(WS-M-R-CURRENT)
+                   DISPLAY "TE HA HERIDO EL MONSTRUO, TIENES HP: "
+                       WS-H-R-HP(WS-H-R-CURRENT)
+               END-IF
+           END-PERFORM.
       ******************************************************************
        EXIT-GAME.
            DISPLAY "SALIR - [GUARDAR CAMBIOS]".
+      * == [DISPLAY-MAIN-MENU] =====================================END=
+
+      ******************************************************************
+      * == [INIT--WS-MONSTERS-R--CONTENT] ========================BEGIN=
+       INIT--WS-MONSTERS-R--CONTENT.
+           OPEN INPUT MONSTERS-FILE.
+           IF NOT WS-M-FS-OK THEN
+               PERFORM ERROR-OPENING-MONSTERS
+           ELSE
+               PERFORM SET--WS-MONSTERS-R--CONTENT
+               CLOSE MONSTERS-FILE
+           END-IF.
+      ******************************************************************
+       SET--WS-MONSTERS-R--CONTENT.
+           PERFORM READ-FILE-MONSTERS VARYING WS-M-R-INDEX FROM 1 BY 1
+             UNTIL WS-M-FS-EOF OR WS-M-R-INDEX > WS-MAX-MONSTERS.
+      ******************************************************************
+       READ-FILE-MONSTERS.
+           READ MONSTERS-FILE INTO WS-MONSTERS-R(WS-M-R-INDEX)
+           AT END
+               SET WS-M-FS-EOF TO TRUE
+           NOT AT END
+               ADD 1 TO WS-M-R-LENGTH
+           END-READ.
+      ******************************************************************
+       ERROR-OPENING-MONSTERS.
+           DISPLAY "["WS-GAME-NAME"] Fichero MONSTERS no disponible.".
+      * == [INIT--WS-MONSTERS-R--CONTENT] ==========================END=
+
       ******************************************************************
        STOP-RUN.
            STOP RUN.

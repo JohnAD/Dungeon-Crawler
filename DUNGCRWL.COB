@@ -133,13 +133,9 @@
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-           PERFORM INIT--WS-MONSTERS-R--CONTENT.
-           IF WS-M-FS-OK THEN
-               PERFORM DISPLAY-MONSTERS
-               SET WS-RESET-VALID-OPTION TO TRUE
-               PERFORM SET-MAIN-MENU-ERROR
-               PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT
-           END-IF.
+           SET WS-RESET-VALID-OPTION TO TRUE
+           PERFORM SET-MAIN-MENU-ERROR
+           PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT
 
            GO TO STOP-RUN.
       ******************************************************************
@@ -165,7 +161,11 @@
            WHEN WS-MM-OP-MODIFY
                PERFORM DISPLAY-MODIFY-HERO
            WHEN WS-MM-OP-PLAY
-               PERFORM PLAY
+               PERFORM INIT--WS-MONSTERS-R--CONTENT
+               IF WS-M-FS-OK THEN
+                   PERFORM DISPLAY-MONSTERS
+                   PERFORM PLAY
+               END-IF
            WHEN WS-MM-OP-EXIT
                PERFORM EXIT-GAME
            WHEN OTHER

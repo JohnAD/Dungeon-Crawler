@@ -47,10 +47,10 @@
                88 WS-MM-OP-MODIFY        VALUE "2".
                88 WS-MM-OP-PLAY          VALUE "3".
            05 WS-MM.
-               10 WS-MM-HEADING    PIC X(05) VALUE "MENU ".
+               10 WS-MM-HEADING    PIC X(15) VALUE "MENU PRINCIPAL ".
                10 WS-MM-ERROR      PIC X(28) VALUE ALL SPACES.
                10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(04) VALUE ALL "-".
+               10 FILLER           PIC X(14) VALUE ALL "-".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(20)
                  VALUE "1- Seleccionar heroe".
@@ -228,13 +228,14 @@
            IF WS-H-R-CURRENT > 0 THEN
                CALL "MOD-HEROE" USING WS-HEROES-R(WS-H-R-CURRENT)
            ELSE
-               DISPLAY "PRIMERO DEBES SELECCIONAR UN HEROE!"
+               DISPLAY "["WS-GAME-NAME"] "
+                 "Primero debes seleccionar un heroe!"
            END-IF.
       ******************************************************************
        PLAY.
-           DISPLAY "A LA BATALLA!".
            IF WS-H-R-CURRENT > 0 THEN
                IF WS-M-R-LENGTH > 0 THEN
+                   DISPLAY "["WS-GAME-NAME"] A LA BATALLA!"
                    MOVE 1 TO WS-M-R-CURRENT
                    PERFORM UNTIL
                      NOT (WS-H-R-HP(WS-H-R-CURRENT) > 0
@@ -243,15 +244,17 @@
                        ADD 1 TO WS-M-R-CURRENT
                    END-PERFORM
                    IF WS-H-R-HP(WS-H-R-CURRENT) > 0 THEN
-                       DISPLAY "HAS GANADO !!"
+                       DISPLAY "["WS-GAME-NAME"] Has Ganado!!"
                    ELSE
-                       DISPLAY "HAS PERDIDO."
+                       DISPLAY "["WS-GAME-NAME"] Has Perdido :("
                    END-IF
                ELSE
-                   DISPLAY "NO HAY MONSTRUOS CONTRA LOS QUE LUCHAR!"
+                   DISPLAY "["WS-GAME-NAME"] "
+                   "No quedan mas monstruos contra los que luchar"
                END-IF
            ELSE
-               DISPLAY "PRIMERO SELECCIONA UN HEROE!"
+               DISPLAY "["WS-GAME-NAME"] "
+                 "Debes de seleccionar un heroe primero!"
            END-IF.
       ******************************************************************
        FIGHT-AGAINST-MONSTER.

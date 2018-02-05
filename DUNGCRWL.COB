@@ -36,35 +36,14 @@
                                          VALUE "Dungeon Crawler".
            05 WS-MAX-HEROES            PIC 9(02) VALUE 7.
            05 WS-MAX-MONSTERS          PIC 9(02) VALUE 10.
-       01 WS-VALID-OPTION  PIC X(28)   VALUES ALL SPACES.
-           88 WS-RESET-VALID-OPTION    VALUE ALL SPACES.
-           88 WS-INVALID-OPTION
-             VALUE "[Escoge una opcion correcta]".
-       01 WS-MAIN-MENU.
-           05 WS-MM-OPTION             PIC X(01) VALUE SPACE.
-               88 WS-MM-OP-EXIT          VALUE "0".
-               88 WS-MM-OP-SELECT        VALUE "1".
-               88 WS-MM-OP-MODIFY        VALUE "2".
-               88 WS-MM-OP-PLAY          VALUE "3".
-           05 WS-MM.
-               10 WS-MM-HEADING    PIC X(15) VALUE "MENU PRINCIPAL ".
-               10 WS-MM-ERROR      PIC X(28) VALUE ALL SPACES.
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(14) VALUE ALL "-".
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(20)
-                 VALUE "1- Seleccionar heroe".
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(18) VALUE "2- Modificar heroe".
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(16) VALUE "3- A la batalla!".
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(09) VALUE "0- Salir.".
        01 WS-HEROES-FILE.
            05 WS-HEROES-FS         PIC X(02) VALUE ZEROES.
                88 WS-H-FS-OK         VALUE "00".
                88 WS-H-FS-EOF        VALUE HIGH-VALUE.
+           05 WS-HERO-PROFESSION   PIC X(02) VALUE SPACES.
+               88 WS-H-P-GUERRERO  VALUE "34".
+               88 WS-H-P-ARQUERO   VALUE "44".
+               88 WS-H-P-MAGO      VALUE "45".
            05 WS-HEROES-REG.
                10 WS-H-R-LENGTH    PIC 9(01) VALUE ZERO.
                10 WS-H-R-INDEX     PIC 9(01) VALUE ZERO.
@@ -93,35 +72,64 @@
                    15 WS-M-R-LEVEL             PIC 9(02) VALUE ZERO.
                    15 WS-M-R-HP                PIC S9(02) VALUE ZERO.
                    15 WS-M-R-PROFESSION        PIC 9(02) VALUE ZERO.
+       01 WS-VALID-OPTION  PIC X(28)   VALUES ALL SPACES.
+           88 WS-RESET-VALID-OPTION    VALUE ALL SPACES.
+           88 WS-INVALID-OPTION
+             VALUE "[Escoge una opcion correcta]".
+       01 WS-MAIN-MENU.
+           05 WS-MM-OPTION             PIC X(01) VALUE SPACE.
+               88 WS-MM-OP-EXIT          VALUE "0".
+               88 WS-MM-OP-SELECT        VALUE "1".
+               88 WS-MM-OP-MODIFY        VALUE "2".
+               88 WS-MM-OP-PLAY          VALUE "3".
+           05 WS-MM.
+               10 WS-MM-HEADING    PIC X(15) VALUE "MENU PRINCIPAL ".
+               10 WS-MM-ERROR      PIC X(28) VALUE ALL SPACES.
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(14) VALUE ALL "-".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(20)
+                 VALUE "1- Seleccionar heroe".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(18) VALUE "2- Modificar heroe".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(16) VALUE "3- A la batalla!".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(09) VALUE "0- Salir.".
        01 WS-HEROES-MENU.
            05 WS-H-OPTION            PIC X(01) VALUE SPACE.
                88 WS-H-OP-CONTINUE     VALUE SPACE.
                88 WS-H-OP-EXIT         VALUE "0".
            05 WS-HEROES-MENU-TITLE.
-               10 WS-HM-HEADING    PIC X(17)
-                 VALUE "LISTADO DE HEROES".
+               10 WS-HM-HEADING    PIC X(18)
+                 VALUE "LISTADO DE HEROES ".
+               10 WS-HM-ERROR      PIC X(28) VALUE ALL SPACES.
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(17) VALUE ALL "-".
                10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(50)
-             VALUE "   ID  Fuerza  Agilidad  Nivel  P. Vida  Profesion".
                10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(50)
-             VALUE "   --  ------  --------  -----  -------  ---------".
+               10 FILLER           PIC X(52)
+           VALUE "     ID  Fuerza  Agilidad  Nivel  P. Vida  Profesion".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(52)
+           VALUE "     --  ------  --------  -----  -------  ---------".
            05 WS-HEROES-MENU-CONTENT.
+               10 WS-HMC-SELECTED  PIC X(01) VALUE SPACE.
+               10 FILLER           PIC X(01) VALUE SPACE.
                10 WS-HMC-INDEX     PIC 9(01).
                10 FILLER           PIC X(02) VALUE "- ".
                10 WS-HMC-ID        PIC 9(02) .
-               10 FILLER           PIC X(04) VALUE "    ".
+               10 FILLER           PIC X(04) VALUE SPACES.
                10 WS-HMC-STRENGTH  PIC 9(02).
-               10 FILLER           PIC X(07) VALUE "       ".
+               10 FILLER           PIC X(07) VALUE SPACES.
                10 WS-HMC-AGILITY   PIC 9(02).
-               10 FILLER           PIC X(06) VALUE "      ".
+               10 FILLER           PIC X(06) VALUE SPACES.
                10 WS-HMC-LEVEL     PIC 9(02).
-               10 FILLER           PIC X(06) VALUE "      ".
+               10 FILLER           PIC X(06) VALUE SPACES.
                10 WS-HMC-HP        PIC 9(02).
-               10 FILLER           PIC X(08) VALUE "        ".
-               10 WS-HMC-PROFESSION    PIC 9(02).
+               10 FILLER           PIC X(06) VALUE SPACES.
+               10 WS-HMC-PROFESSION    PIC X(08).
            05 WS-HEROES-MENU-FOOTER.
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(09) VALUE "0- Salir".
@@ -133,14 +141,20 @@
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-           SET WS-RESET-VALID-OPTION TO TRUE
-           PERFORM SET-MAIN-MENU-ERROR
-           PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT
+           PERFORM INIT--WS-HEROES-R--CONTENT
+           IF WS-M-FS-OK THEN
+               PERFORM INIT--WS-MONSTERS-R--CONTENT
+               IF WS-M-FS-OK THEN
+                   SET WS-RESET-VALID-OPTION TO TRUE
+                   PERFORM SET-MAIN-MENU-TO-ERROR
+                   PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT
+               END-IF
+           END-IF
 
            GO TO STOP-RUN.
       ******************************************************************
        DISPLAY-MONSTERS.
-           DISPLAY "LOADED MONSTERS FILE:"
+           DISPLAY "LOADED MONSTERS FILE:"WS-M-R-LENGTH
            DISPLAY "--------"
            PERFORM VARYING WS-M-R-INDEX FROM 1 BY 1
                UNTIL WS-M-R-INDEX > WS-M-R-LENGTH
@@ -161,8 +175,7 @@
            WHEN WS-MM-OP-MODIFY
                PERFORM DISPLAY-MODIFY-HERO
            WHEN WS-MM-OP-PLAY
-               PERFORM INIT--WS-MONSTERS-R--CONTENT
-               IF WS-M-FS-OK THEN
+               IF WS-M-R-LENGTH > 0 THEN
                    PERFORM DISPLAY-MONSTERS
                    PERFORM PLAY
                END-IF
@@ -170,59 +183,81 @@
                PERFORM EXIT-GAME
            WHEN OTHER
                SET WS-INVALID-OPTION TO TRUE
-               PERFORM SET-MAIN-MENU-ERROR
+               PERFORM SET-MAIN-MENU-TO-ERROR
            END-EVALUATE.
       ******************************************************************
-       SET-MAIN-MENU-ERROR.
+       SET-MAIN-MENU-TO-ERROR.
            MOVE WS-VALID-OPTION TO WS-MM-ERROR.
       ******************************************************************
        DISPLAY-SELECT-HERO.
-           OPEN INPUT HEROES-FILE.
-           IF NOT WS-H-FS-OK THEN
-               PERFORM ERROR-OPENING-HEROES
-           ELSE
-               PERFORM DISPLAY-HEROES-MENU UNTIL WS-H-OP-EXIT
-                 OR (1 <= WS-H-OPTION AND WS-H-OPTION <= WS-H-R-LENGTH)
+           SET WS-RESET-VALID-OPTION TO TRUE.
+           PERFORM SET-LIST-HEROES-MENU-TO-ERROR.
+           PERFORM DISPLAY-HEROES-MENU UNTIL WS-H-OP-EXIT OR
+             (1 <= WS-H-OPTION AND WS-H-OPTION <= WS-H-R-LENGTH)
+           IF NOT WS-H-OP-EXIT THEN
                MOVE WS-H-OPTION TO WS-H-R-CURRENT
-               SET WS-H-OP-CONTINUE TO TRUE
-               CLOSE HEROES-FILE
-           END-IF.
+           END-IF
+           SET WS-H-OP-CONTINUE TO TRUE.
       ******************************************************************
-       READ-FILE-HEROES.
-           READ HEROES-FILE INTO WS-HEROES-R(WS-H-R-INDEX)
-           AT END
-               SET WS-H-FS-EOF TO TRUE
-           NOT AT END
-               MOVE WS-H-R-INDEX TO WS-HMC-INDEX
-               MOVE WS-H-R-ID(WS-H-R-INDEX) TO WS-HMC-ID
-               MOVE WS-H-R-STRENGTH(WS-H-R-INDEX) TO WS-HMC-STRENGTH
-               MOVE WS-H-R-AGILITY(WS-H-R-INDEX) TO WS-HMC-AGILITY
-               MOVE WS-H-R-LEVEL(WS-H-R-INDEX) TO WS-HMC-LEVEL
+       DISPLAY--WS-HEROES-R.
+           IF WS-H-R-INDEX = WS-H-R-CURRENT THEN
+               MOVE "*" TO WS-HMC-SELECTED
+           ELSE
+               MOVE SPACE TO WS-HMC-SELECTED
+           END-IF
+
+           MOVE WS-H-R-INDEX TO WS-HMC-INDEX
+           MOVE WS-H-R-ID(WS-H-R-INDEX) TO WS-HMC-ID
+           MOVE WS-H-R-STRENGTH(WS-H-R-INDEX) TO WS-HMC-STRENGTH
+           MOVE WS-H-R-AGILITY(WS-H-R-INDEX) TO WS-HMC-AGILITY
+           MOVE WS-H-R-LEVEL(WS-H-R-INDEX) TO WS-HMC-LEVEL
+           IF WS-H-R-HP(WS-H-R-INDEX) > 0 THEN
                MOVE WS-H-R-HP(WS-H-R-INDEX) TO WS-HMC-HP
-               MOVE WS-H-R-PROFESSION(WS-H-R-INDEX) TO WS-HMC-PROFESSION
-               DISPLAY WS-HEROES-MENU-CONTENT
-               ADD 1 TO WS-H-R-LENGTH
-           END-READ.
+           ELSE
+               MOVE 0 TO WS-HMC-HP
+           END-IF
+           MOVE WS-H-R-PROFESSION(WS-H-R-INDEX)
+             TO WS-HERO-PROFESSION
+
+           EVALUATE TRUE
+           WHEN WS-H-P-GUERRERO
+               MOVE "GUERRERO" TO WS-HMC-PROFESSION
+           WHEN WS-H-P-ARQUERO
+               MOVE "ARQUERO " TO WS-HMC-PROFESSION
+           WHEN WS-H-P-MAGO
+               MOVE "  MAGO  " TO WS-HMC-PROFESSION
+           END-EVALUATE
+
+           DISPLAY WS-HEROES-MENU-CONTENT.
       ******************************************************************
        DISPLAY-HEROES-MENU.
            PERFORM DISPLAY-HEROES-MENU-TITLE.
            PERFORM DISPLAY-HEROES-MENU-CONTENT.
            PERFORM DISPLAY-HEROES-MENU-FOOTER.
            ACCEPT WS-H-OPTION.
+
+           IF NOT (1 <= WS-H-OPTION AND WS-H-OPTION <= WS-H-R-LENGTH)
+             THEN
+               SET WS-INVALID-OPTION TO TRUE
+           ELSE
+               SET WS-RESET-VALID-OPTION TO TRUE
+           END-IF
+
+           PERFORM SET-LIST-HEROES-MENU-TO-ERROR.
       ******************************************************************
        DISPLAY-HEROES-MENU-TITLE.
            DISPLAY WS-HEROES-MENU-TITLE.
       ******************************************************************
        DISPLAY-HEROES-MENU-CONTENT.
-           PERFORM READ-FILE-HEROES VARYING WS-H-R-INDEX FROM 1 BY 1
-             UNTIL WS-H-FS-EOF OR WS-H-R-INDEX > WS-MAX-HEROES.
+           PERFORM DISPLAY--WS-HEROES-R VARYING WS-H-R-INDEX
+             FROM 1 BY 1 UNTIL WS-H-R-INDEX > WS-H-R-LENGTH.
       ******************************************************************
        DISPLAY-HEROES-MENU-FOOTER.
            MOVE WS-H-R-LENGTH TO WS-HMF-LENGTH.
            DISPLAY WS-HEROES-MENU-FOOTER.
       ******************************************************************
-       ERROR-OPENING-HEROES.
-           DISPLAY "["WS-GAME-NAME"] Fichero HEROES no disponible.".
+       SET-LIST-HEROES-MENU-TO-ERROR.
+          MOVE WS-VALID-OPTION TO WS-HM-ERROR.
       ******************************************************************
        DISPLAY-MODIFY-HERO.
            IF WS-H-R-CURRENT > 0 THEN
@@ -240,7 +275,7 @@
                    PERFORM UNTIL
                      NOT (WS-H-R-HP(WS-H-R-CURRENT) > 0
                      AND WS-M-R-CURRENT <= WS-M-R-LENGTH)
-                       PERFORM FIGHT-AGAINST-MONSTER
+                       PERFORM FIGHT-MONSTER
                        ADD 1 TO WS-M-R-CURRENT
                    END-PERFORM
                    IF WS-H-R-HP(WS-H-R-CURRENT) > 0 THEN
@@ -257,7 +292,7 @@
                  "Debes de seleccionar un heroe primero!"
            END-IF.
       ******************************************************************
-       FIGHT-AGAINST-MONSTER.
+       FIGHT-MONSTER.
            PERFORM UNTIL WS-H-R-HP(WS-H-R-CURRENT) < 0
              OR WS-M-R-HP(WS-M-R-CURRENT) < 0
            DISPLAY "WS-H-R-HP("WS-H-R-CURRENT"): "
@@ -292,6 +327,34 @@
       * == [DISPLAY-MAIN-MENU] =====================================END=
 
       ******************************************************************
+      * == [INIT--WS-HEROES-R--CONTENT] ==========================BEGIN=
+       INIT--WS-HEROES-R--CONTENT.
+           OPEN INPUT HEROES-FILE.
+           IF NOT WS-H-FS-OK THEN
+               PERFORM ERROR-OPENING-HEROES
+           ELSE
+               PERFORM SET--WS-HEROES-R--CONTENT
+               CLOSE HEROES-FILE
+           END-IF.
+      ******************************************************************
+       SET--WS-HEROES-R--CONTENT.
+           MOVE 0 TO WS-H-R-LENGTH.
+           PERFORM READ-FILE-HEROES VARYING WS-H-R-INDEX FROM 1 BY 1
+             UNTIL WS-H-FS-EOF OR WS-H-R-INDEX > WS-MAX-HEROES.
+      ******************************************************************
+       READ-FILE-HEROES.
+           READ HEROES-FILE INTO WS-HEROES-R(WS-H-R-INDEX)
+           AT END
+               SET WS-H-FS-EOF TO TRUE
+           NOT AT END
+               ADD 1 TO WS-H-R-LENGTH
+           END-READ.
+      ******************************************************************
+       ERROR-OPENING-HEROES.
+           DISPLAY "["WS-GAME-NAME"] Fichero HEROES no disponible.".
+      * == [INIT--WS-HEROES-R--CONTENT] ============================END=
+
+      ******************************************************************
       * == [INIT--WS-MONSTERS-R--CONTENT] ========================BEGIN=
        INIT--WS-MONSTERS-R--CONTENT.
            OPEN INPUT MONSTERS-FILE.
@@ -303,6 +366,7 @@
            END-IF.
       ******************************************************************
        SET--WS-MONSTERS-R--CONTENT.
+           MOVE 0 TO WS-M-R-LENGTH.
            PERFORM READ-FILE-MONSTERS VARYING WS-M-R-INDEX FROM 1 BY 1
              UNTIL WS-M-FS-EOF OR WS-M-R-INDEX > WS-MAX-MONSTERS.
       ******************************************************************

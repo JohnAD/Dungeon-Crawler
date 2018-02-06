@@ -146,8 +146,6 @@
            IF WS-M-FS-OK THEN
                PERFORM INIT--WS-MONSTERS-R--CONTENT
                IF WS-M-FS-OK THEN
-                   SET WS-RESET-VALID-OPTION TO TRUE
-                   PERFORM SET-MAIN-MENU-TO-ERROR
                    PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT
                END-IF
            END-IF
@@ -171,7 +169,10 @@
       ******************************************************************
       * == [DISPLAY-MAIN-MENU] ===================================BEGIN=
        DISPLAY-MAIN-MENU.
+           PERFORM SET-MAIN-MENU-ERROR
            DISPLAY WS-MM.
+
+           SET WS-RESET-VALID-OPTION TO TRUE
            ACCEPT WS-MM-OPTION.
 
            EVALUATE TRUE
@@ -187,21 +188,20 @@
                PERFORM EXIT-GAME
            WHEN OTHER
                SET WS-INVALID-OPTION TO TRUE
-               PERFORM SET-MAIN-MENU-TO-ERROR
            END-EVALUATE.
       ******************************************************************
-       SET-MAIN-MENU-TO-ERROR.
+       SET-MAIN-MENU-ERROR.
            MOVE WS-VALID-OPTION TO WS-MM-ERROR.
       ******************************************************************
        DISPLAY-SELECT-HERO.
            SET WS-RESET-VALID-OPTION TO TRUE.
-           PERFORM SET-LIST-HEROES-MENU-TO-ERROR.
            PERFORM DISPLAY-HEROES-MENU UNTIL WS-H-OP-EXIT OR
              (1 <= WS-H-OPTION AND WS-H-OPTION <= WS-H-R-LENGTH)
            IF NOT WS-H-OP-EXIT THEN
                MOVE WS-H-OPTION TO WS-H-R-CURRENT
            END-IF
            SET WS-H-OP-CONTINUE TO TRUE.
+           SET WS-RESET-VALID-OPTION TO TRUE.
       ******************************************************************
        DISPLAY--WS-HEROES-R.
            IF WS-H-R-INDEX = WS-H-R-CURRENT THEN
@@ -235,6 +235,7 @@
            DISPLAY WS-HEROES-MENU-CONTENT.
       ******************************************************************
        DISPLAY-HEROES-MENU.
+           PERFORM SET-LIST-HEROES-MENU-TO-ERROR.
            PERFORM DISPLAY-HEROES-MENU-TITLE.
            PERFORM DISPLAY-HEROES-MENU-CONTENT.
            PERFORM DISPLAY-HEROES-MENU-FOOTER.
@@ -245,9 +246,7 @@
                SET WS-INVALID-OPTION TO TRUE
            ELSE
                SET WS-RESET-VALID-OPTION TO TRUE
-           END-IF
-
-           PERFORM SET-LIST-HEROES-MENU-TO-ERROR.
+           END-IF.
       ******************************************************************
        DISPLAY-HEROES-MENU-TITLE.
            DISPLAY WS-HEROES-MENU-TITLE.

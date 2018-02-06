@@ -83,7 +83,8 @@
                88 WS-MM-OP-MODIFY        VALUE "2".
                88 WS-MM-OP-PLAY          VALUE "3".
            05 WS-MM.
-               10 WS-MM-HEADING    PIC X(15) VALUE "MENU PRINCIPAL ".
+               10 FILLER               PIC X(15)
+                                         VALUE "MENU PRINCIPAL".
                10 WS-MM-ERROR      PIC X(28) VALUE ALL SPACES.
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(14) VALUE ALL "-".

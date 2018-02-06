@@ -139,6 +139,40 @@
                  VALUE "Escoge un heroe (1 - ".
                10 WS-HMF-LENGTH    PIC 9(01).
                10 FILLER           PIC X(02) VALUE "):".
+       01 WS-MOD-HEROES-MENU.
+           05 WS-MHM-OPTION            PIC X(01) VALUE SPACE.
+               88 WS-MHM-OP-CONTINUE     VALUE SPACE.
+               88 WS-MHM-OP-EXIT         VALUE "0".
+               88 WS-MHM-OP-STRENGTH     VALUE "1".
+               88 WS-MHM-OP-AGILITY      VALUE "2".
+               88 WS-MHM-OP-LEVEL        VALUE "3".
+               88 WS-MHM-OP-HP           VALUE "4".
+           05 WS-MHM-TITLE.
+               10 FILLER               PIC X(17)
+                                         VALUE "MODIFICAR HEROE: ".
+               10 WS-MHM-ERROR         PIC X(28) VALUE ALL SPACES.
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(17) VALUE ALL "-".
+           05 WS-MHM-CONTENT.
+               10 FILLER               PIC X(11) VALUE "1- Fuerza: ".
+               10 WS-MHM-C-STRENGTH    PIC 9(02) VALUE ZEROES.
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(13) VALUE "2- Agilidad: ".
+               10 WS-MHM-C-AGILITY     PIC 9(02) VALUE ZEROES.
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(10) VALUE "3- Nivel: ".
+               10 WS-MHM-C-LEVEL       PIC 9(02) VALUE ZEROES.
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(16)
+                                         VALUE "4- Puntos Vida: ".
+               10 WS-MHM-C-HP          PIC 9(02) VALUE ZEROES.
+           05 WS-MHM-FOOTER.
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(09) VALUE "0- Salir".
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(21)
+                                         VALUE "Escoge una opcion: ".
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
@@ -264,7 +298,9 @@
       ******************************************************************
        DISPLAY-MODIFY-HERO.
            IF WS-H-R-CURRENT > 0 THEN
-               CALL "MOD-HEROE" USING WS-HEROES-R(WS-H-R-CURRENT)
+               SET WS-MHM-OP-CONTINUE TO TRUE
+               SET WS-RESET-VALID-OPTION TO TRUE
+               PERFORM DISPLAY-MOD-HEROES-MENU UNTIL WS-MHM-OP-EXIT
            ELSE
                DISPLAY "["WS-GAME-NAME"] "
                  "Primero debes seleccionar un heroe!"
@@ -387,6 +423,57 @@
            DISPLAY "["WS-GAME-NAME"] Fichero MONSTERS no disponible.".
       * == [INIT--WS-MONSTERS-R--CONTENT] ==========================END=
 
+      ******************************************************************
+       DISPLAY-MOD-HEROES-MENU.
+           MOVE WS-H-R-STRENGTH((WS-H-R-CURRENT)) TO WS-MHM-C-STRENGTH.
+           MOVE WS-H-R-AGILITY(WS-H-R-CURRENT) TO WS-MHM-C-AGILITY.
+           MOVE WS-H-R-LEVEL(WS-H-R-CURRENT) TO WS-MHM-C-LEVEL.
+           IF WS-H-R-HP(WS-H-R-CURRENT) < 0 THEN
+               MOVE 0 TO WS-MHM-C-HP
+           ELSE
+               MOVE WS-H-R-HP(WS-H-R-CURRENT) TO WS-MHM-C-HP
+           END-IF.
+
+           PERFORM SET-MENU-ERROR.
+           DISPLAY WS-MHM-TITLE.
+           DISPLAY WS-MHM-CONTENT.
+           DISPLAY WS-MHM-FOOTER.
+
+           SET WS-RESET-VALID-OPTION TO TRUE
+           ACCEPT WS-MHM-OPTION.
+
+           EVALUATE TRUE
+               WHEN WS-MHM-OP-STRENGTH
+                   DISPLAY "["WS-GAME-NAME"] "
+                     "Selecciona el nuevo valor de Fuerza: "
+                   DISPLAY "- Valor antiguo: "WS-MHM-C-STRENGTH
+                   DISPLAY "- Nuevo valor: "
+                   ACCEPT WS-H-R-STRENGTH(WS-H-R-CURRENT)
+
+               WHEN WS-MHM-OP-AGILITY
+                   DISPLAY "["WS-GAME-NAME"] "
+                     "Selecciona el nuevo valor de Agilidad: "
+                   DISPLAY "- Valor antiguo: "WS-MHM-C-AGILITY
+                   DISPLAY "- Nuevo valor: "
+                   ACCEPT WS-H-R-AGILITY(WS-H-R-CURRENT)
+               WHEN WS-MHM-OP-LEVEL
+                   DISPLAY "["WS-GAME-NAME"] "
+                     "Selecciona el nuevo valor de Nivel: "
+                   DISPLAY "- Valor antiguo: "WS-MHM-C-LEVEL
+                   DISPLAY "- Nuevo valor: "
+                   ACCEPT WS-H-R-LEVEL(WS-H-R-CURRENT)
+               WHEN WS-MHM-OP-HP
+                   DISPLAY "["WS-GAME-NAME"] "
+                     "Selecciona el nuevo valor de Vida: "
+                   DISPLAY "- Valor antiguo: "WS-MHM-C-HP
+                   DISPLAY "- Nuevo valor: "
+                   ACCEPT WS-H-R-HP(WS-H-R-CURRENT)
+               WHEN OTHER
+                   SET WS-INVALID-OPTION TO TRUE
+           END-EVALUATE.
+      ******************************************************************
+       SET-MENU-ERROR.
+           MOVE WS-VALID-OPTION TO WS-MHM-ERROR.
       ******************************************************************
        STOP-RUN.
            STOP RUN.

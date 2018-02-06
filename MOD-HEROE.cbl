@@ -9,6 +9,10 @@
        01 WS-CONSTANTS.
            05 WS-GAME-NAME             PIC X(15)
                                        VALUE "Dungeon Crawler".
+       01 WS-VALID-OPTION              PIC X(28)   VALUES ALL SPACES.
+           88 WS-RESET-VALID-OPTION      VALUE ALL SPACES.
+           88 WS-INVALID-OPTION
+             VALUE "[Escoge una opcion correcta]".
        01 WS-HEROES-MENU.
            05 WS-HM-OPTION             PIC X(01) VALUE SPACE.
                88 WS-HM-OP-CONTINUE      VALUE SPACE.
@@ -20,6 +24,7 @@
            05 WS-HM-TITLE.
                10 FILLER               PIC X(17)
                                          VALUE "MODIFICAR HEROE: ".
+               10 WS-HM-ERROR          PIC X(28) VALUE ALL SPACES.
                10 FILLER               PIC X(01) VALUE X"0A".
                10 FILLER               PIC X(17) VALUE ALL "-".
            05 WS-HM-CONTENT.
@@ -54,6 +59,7 @@
        PROCEDURE DIVISION USING LS-HEROE.
        MAIN-PROCEDURE.
            SET WS-HM-OP-CONTINUE TO TRUE.
+           SET WS-RESET-VALID-OPTION TO TRUE
            PERFORM DISPLAY-MENU UNTIL WS-HM-OP-EXIT.
            EXIT PROGRAM.
       ******************************************************************
@@ -67,10 +73,12 @@
                MOVE LS-H-HP TO WS-HM-C-HP
            END-IF.
 
+           PERFORM SET-MENU-TO-ERROR.
            DISPLAY WS-HM-TITLE.
            DISPLAY WS-HM-CONTENT.
            DISPLAY WS-HM-FOOTER.
 
+           SET WS-RESET-VALID-OPTION TO TRUE
            ACCEPT WS-HM-OPTION.
 
            EVALUATE TRUE
@@ -99,9 +107,11 @@
                    DISPLAY "- Valor antiguo: "WS-HM-C-HP
                    DISPLAY "- Nuevo valor: "
                    ACCEPT LS-H-HP
-               WHEN WS-HM-OP-EXIT
-                    EXIT PROGRAM
+               WHEN OTHER
+                   SET WS-INVALID-OPTION TO TRUE
            END-EVALUATE.
-
+      ******************************************************************
+       SET-MENU-TO-ERROR.
+           MOVE WS-VALID-OPTION TO WS-HM-ERROR.
       ******************************************************************
        END PROGRAM MOD-HEROE.

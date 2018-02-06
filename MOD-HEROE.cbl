@@ -13,34 +13,34 @@
            88 WS-RESET-VALID-OPTION      VALUE ALL SPACES.
            88 WS-INVALID-OPTION
              VALUE "[Escoge una opcion correcta]".
-       01 WS-HEROES-MENU.
-           05 WS-HM-OPTION             PIC X(01) VALUE SPACE.
-               88 WS-HM-OP-CONTINUE      VALUE SPACE.
-               88 WS-HM-OP-EXIT          VALUE "0".
-               88 WS-HM-OP-STRENGTH      VALUE "1".
-               88 WS-HM-OP-AGILITY       VALUE "2".
-               88 WS-HM-OP-LEVEL         VALUE "3".
-               88 WS-HM-OP-HP            VALUE "4".
-           05 WS-HM-TITLE.
+       01 WS-MOD-HEROES-MENU.
+           05 WS-MHM-OPTION            PIC X(01) VALUE SPACE.
+               88 WS-MHM-OP-CONTINUE     VALUE SPACE.
+               88 WS-MHM-OP-EXIT         VALUE "0".
+               88 WS-MHM-OP-STRENGTH     VALUE "1".
+               88 WS-MHM-OP-AGILITY      VALUE "2".
+               88 WS-MHM-OP-LEVEL        VALUE "3".
+               88 WS-MHM-OP-HP           VALUE "4".
+           05 WS-MHM-TITLE.
                10 FILLER               PIC X(17)
                                          VALUE "MODIFICAR HEROE: ".
-               10 WS-HM-ERROR          PIC X(28) VALUE ALL SPACES.
+               10 WS-MHM-ERROR         PIC X(28) VALUE ALL SPACES.
                10 FILLER               PIC X(01) VALUE X"0A".
                10 FILLER               PIC X(17) VALUE ALL "-".
-           05 WS-HM-CONTENT.
+           05 WS-MHM-CONTENT.
                10 FILLER               PIC X(11) VALUE "1- Fuerza: ".
-               10 WS-HM-C-STRENGTH     PIC 9(02) VALUE ZEROES.
+               10 WS-MHM-C-STRENGTH    PIC 9(02) VALUE ZEROES.
                10 FILLER               PIC X(01) VALUE X"0A".
                10 FILLER               PIC X(13) VALUE "2- Agilidad: ".
-               10 WS-HM-C-AGILITY      PIC 9(02) VALUE ZEROES.
+               10 WS-MHM-C-AGILITY     PIC 9(02) VALUE ZEROES.
                10 FILLER               PIC X(01) VALUE X"0A".
                10 FILLER               PIC X(10) VALUE "3- Nivel: ".
-               10 WS-HM-C-LEVEL        PIC 9(02) VALUE ZEROES.
+               10 WS-MHM-C-LEVEL       PIC 9(02) VALUE ZEROES.
                10 FILLER               PIC X(01) VALUE X"0A".
                10 FILLER               PIC X(16)
                                          VALUE "4- Puntos Vida: ".
-               10 WS-HM-C-HP           PIC 9(02) VALUE ZEROES.
-           05 WS-HM-FOOTER.
+               10 WS-MHM-C-HP          PIC 9(02) VALUE ZEROES.
+           05 WS-MHM-FOOTER.
                10 FILLER               PIC X(01) VALUE X"0A".
                10 FILLER               PIC X(09) VALUE "0- Salir".
                10 FILLER               PIC X(01) VALUE X"0A".
@@ -58,53 +58,53 @@
       ******************************************************************
        PROCEDURE DIVISION USING LS-HEROE.
        MAIN-PROCEDURE.
-           SET WS-HM-OP-CONTINUE TO TRUE.
+           SET WS-MHM-OP-CONTINUE TO TRUE.
            SET WS-RESET-VALID-OPTION TO TRUE
-           PERFORM DISPLAY-MENU UNTIL WS-HM-OP-EXIT.
+           PERFORM DISPLAY-MENU UNTIL WS-MHM-OP-EXIT.
            EXIT PROGRAM.
       ******************************************************************
        DISPLAY-MENU.
-           MOVE LS-H-STRENGTH TO WS-HM-C-STRENGTH.
-           MOVE LS-H-AGILITY TO WS-HM-C-AGILITY.
-           MOVE LS-H-LEVEL TO WS-HM-C-LEVEL.
+           MOVE LS-H-STRENGTH TO WS-MHM-C-STRENGTH.
+           MOVE LS-H-AGILITY TO WS-MHM-C-AGILITY.
+           MOVE LS-H-LEVEL TO WS-MHM-C-LEVEL.
            IF LS-H-HP < 0 THEN
-               MOVE 0 TO WS-HM-C-HP
+               MOVE 0 TO WS-MHM-C-HP
            ELSE
-               MOVE LS-H-HP TO WS-HM-C-HP
+               MOVE LS-H-HP TO WS-MHM-C-HP
            END-IF.
 
            PERFORM SET-MENU-ERROR.
-           DISPLAY WS-HM-TITLE.
-           DISPLAY WS-HM-CONTENT.
-           DISPLAY WS-HM-FOOTER.
+           DISPLAY WS-MHM-TITLE.
+           DISPLAY WS-MHM-CONTENT.
+           DISPLAY WS-MHM-FOOTER.
 
            SET WS-RESET-VALID-OPTION TO TRUE
-           ACCEPT WS-HM-OPTION.
+           ACCEPT WS-MHM-OPTION.
 
            EVALUATE TRUE
-               WHEN WS-HM-OP-STRENGTH
+               WHEN WS-MHM-OP-STRENGTH
                    DISPLAY "["WS-GAME-NAME"] "
                      "Selecciona el nuevo valor de Fuerza: "
-                   DISPLAY "- Valor antiguo: "WS-HM-C-STRENGTH
+                   DISPLAY "- Valor antiguo: "WS-MHM-C-STRENGTH
                    DISPLAY "- Nuevo valor: "
                    ACCEPT LS-H-STRENGTH
 
-               WHEN WS-HM-OP-AGILITY
+               WHEN WS-MHM-OP-AGILITY
                    DISPLAY "["WS-GAME-NAME"] "
                      "Selecciona el nuevo valor de Agilidad: "
-                   DISPLAY "- Valor antiguo: "WS-HM-C-AGILITY
+                   DISPLAY "- Valor antiguo: "WS-MHM-C-AGILITY
                    DISPLAY "- Nuevo valor: "
                    ACCEPT LS-H-AGILITY
-               WHEN WS-HM-OP-LEVEL
+               WHEN WS-MHM-OP-LEVEL
                    DISPLAY "["WS-GAME-NAME"] "
                      "Selecciona el nuevo valor de Nivel: "
-                   DISPLAY "- Valor antiguo: "WS-HM-C-LEVEL
+                   DISPLAY "- Valor antiguo: "WS-MHM-C-LEVEL
                    DISPLAY "- Nuevo valor: "
                    ACCEPT LS-H-LEVEL
-               WHEN WS-HM-OP-HP
+               WHEN WS-MHM-OP-HP
                    DISPLAY "["WS-GAME-NAME"] "
                      "Selecciona el nuevo valor de Vida: "
-                   DISPLAY "- Valor antiguo: "WS-HM-C-HP
+                   DISPLAY "- Valor antiguo: "WS-MHM-C-HP
                    DISPLAY "- Nuevo valor: "
                    ACCEPT LS-H-HP
                WHEN OTHER
@@ -112,6 +112,6 @@
            END-EVALUATE.
       ******************************************************************
        SET-MENU-ERROR.
-           MOVE WS-VALID-OPTION TO WS-HM-ERROR.
+           MOVE WS-VALID-OPTION TO WS-MHM-ERROR.
       ******************************************************************
        END PROGRAM MOD-HEROE.

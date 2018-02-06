@@ -73,7 +73,7 @@
                MOVE LS-H-HP TO WS-HM-C-HP
            END-IF.
 
-           PERFORM SET-MENU-TO-ERROR.
+           PERFORM SET-MENU-ERROR.
            DISPLAY WS-HM-TITLE.
            DISPLAY WS-HM-CONTENT.
            DISPLAY WS-HM-FOOTER.
@@ -111,7 +111,7 @@
                    SET WS-INVALID-OPTION TO TRUE
            END-EVALUATE.
       ******************************************************************
-       SET-MENU-TO-ERROR.
+       SET-MENU-ERROR.
            MOVE WS-VALID-OPTION TO WS-HM-ERROR.
       ******************************************************************
        END PROGRAM MOD-HEROE.

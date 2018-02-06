@@ -154,10 +154,15 @@
            GO TO STOP-RUN.
       ******************************************************************
        DISPLAY-MONSTERS.
-           DISPLAY "LOADED MONSTERS FILE:"WS-M-R-LENGTH
+           DISPLAY WS-M-R-LENGTH" MONSTERS AVAILABLE:"
            DISPLAY "--------"
            PERFORM VARYING WS-M-R-INDEX FROM 1 BY 1
                UNTIL WS-M-R-INDEX > WS-M-R-LENGTH
+               IF WS-M-R-INDEX = WS-M-R-CURRENT THEN
+                   DISPLAY "* " NO ADVANCING
+               ELSE
+                   DISPLAY "  " NO ADVANCING
+               END-IF
                DISPLAY WS-MONSTERS-R(WS-M-R-INDEX)
            END-PERFORM
            DISPLAY "--------".
@@ -171,12 +176,10 @@
            EVALUATE TRUE
            WHEN WS-MM-OP-SELECT
                PERFORM DISPLAY-SELECT-HERO
-      *         DISPLAY "SELECTED HERO: "WS-H-R-CURRENT
            WHEN WS-MM-OP-MODIFY
                PERFORM DISPLAY-MODIFY-HERO
            WHEN WS-MM-OP-PLAY
                IF WS-M-R-LENGTH > 0 THEN
-                   PERFORM DISPLAY-MONSTERS
                    PERFORM PLAY
                END-IF
            WHEN WS-MM-OP-EXIT
@@ -295,11 +298,13 @@
        FIGHT-MONSTER.
            PERFORM UNTIL WS-H-R-HP(WS-H-R-CURRENT) < 0
              OR WS-M-R-HP(WS-M-R-CURRENT) < 0
-           DISPLAY "WS-H-R-HP("WS-H-R-CURRENT"): "
-             WS-H-R-HP(WS-H-R-CURRENT)
-           DISPLAY "WS-M-R-HP("WS-M-R-CURRENT"): "
-             WS-M-R-HP(WS-M-R-CURRENT)
-               DISPLAY "** LUCHAS CONTRA: "
+               PERFORM DISPLAY-MONSTERS
+               DISPLAY "WS-H-R-HP("WS-H-R-CURRENT"): "
+                 WS-H-R-HP(WS-H-R-CURRENT)
+               DISPLAY "WS-M-R-HP("WS-M-R-CURRENT"): "
+                 WS-M-R-HP(WS-M-R-CURRENT)
+               DISPLAY  "["WS-GAME-NAME"] "
+                   "LUCHAS CONTRA EL MONSTRUO CON ID: ** "
                    WS-M-R-PROFESSION(WS-M-R-CURRENT)" ** "
                    " CON FUERZA: "WS-M-R-STRENGTH(WS-M-R-CURRENT)
                DISPLAY "TIENES HP: "WS-H-R-HP(WS-H-R-CURRENT)

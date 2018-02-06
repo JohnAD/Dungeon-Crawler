@@ -45,7 +45,7 @@
            05 LS-H-STRENGTH          PIC 9(02).
            05 LS-H-AGILITY           PIC 9(02).
            05 LS-H-LEVEL             PIC 9(02).
-           05 LS-H-HP                PIC 9(02).
+           05 LS-H-HP                PIC S9(02).
       ******************************************************************
        PROCEDURE DIVISION USING LS-HEROE.
        MAIN-PROCEDURE.
@@ -58,7 +58,12 @@
            DISPLAY STRENGTH LS-H-STRENGTH.
            DISPLAY AGILITY LS-H-AGILITY.
            DISPLAY LEVEL LS-H-LEVEL.
-           DISPLAY HP LS-H-HP.
+           DISPLAY HP NO ADVANCING.
+           IF LS-H-HP < 0 THEN
+               DISPLAY "00"
+           ELSE
+               DISPLAY LS-H-HP
+           END-IF.
            DISPLAY H-MENU-FOOTER.
            ACCEPT WS-H-OPTION.
       ******************************************************************

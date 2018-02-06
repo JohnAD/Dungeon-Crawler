@@ -7,100 +7,101 @@
        FILE SECTION.
        WORKING-STORAGE SECTION.
        01 WS-CONSTANTS.
-           05 WS-GAME-NAME PIC X(15)   VALUE "Dungeon Crawler".
-       01 HEROES-MENU.
-           05 WS-H-OPTION            PIC X(01) VALUE SPACE.
-               88 WS-H-OP-CONTINUE     VALUE SPACE.
-               88 WS-H-OP-EXIT         VALUE "0".
-               88 WS-H-OP-STRENGTH     VALUE "1".
-               88 WS-H-OP-AGILITY     VALUE "2".
-               88 WS-H-OP-LEVEL       VALUE "3".
-               88 WS-H-OP-HP       VALUE "4".
-           05 H-MENU-TITLE.
-               10 WS-HM-HEADING    PIC X(17)
-                 VALUE "MODIFICAR HEROE: ".
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(17) VALUE ALL "-".
-           05 H-MENU-CONTENT.
-               10 STRENGTH         PIC X(11) VALUE "1- Fuerza: ".
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 AGILITY          PIC X(13) VALUE "2- Agilidad: ".
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 LEVEL            PIC X(10) VALUE "3- Nivel: ".
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 HP               PIC X(16) VALUE "4- Puntos Vida: ".
-           05 H-MENU-FOOTER.
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(09) VALUE "0- Salir".
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(21)
-                 VALUE "Escoge una opcion: ".
-       01 NEW-VALUES-HEROE.
-           05 NEW-VALUE         PIC 9(02).
+           05 WS-GAME-NAME             PIC X(15)
+                                       VALUE "Dungeon Crawler".
+       01 WS-HEROES-MENU.
+           05 WS-HM-OPTION             PIC X(01) VALUE SPACE.
+               88 WS-HM-OP-CONTINUE      VALUE SPACE.
+               88 WS-HM-OP-EXIT          VALUE "0".
+               88 WS-HM-OP-STRENGTH      VALUE "1".
+               88 WS-HM-OP-AGILITY       VALUE "2".
+               88 WS-HM-OP-LEVEL         VALUE "3".
+               88 WS-HM-OP-HP            VALUE "4".
+           05 WS-HM-TITLE.
+               10 FILLER               PIC X(17)
+                                         VALUE "MODIFICAR HEROE: ".
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(17) VALUE ALL "-".
+           05 WS-HM-CONTENT.
+               10 FILLER               PIC X(11) VALUE "1- Fuerza: ".
+               10 WS-HM-C-STRENGTH     PIC 9(02) VALUE ZEROES.
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(13) VALUE "2- Agilidad: ".
+               10 WS-HM-C-AGILITY      PIC 9(02) VALUE ZEROES.
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(10) VALUE "3- Nivel: ".
+               10 WS-HM-C-LEVEL        PIC 9(02) VALUE ZEROES.
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(16)
+                                         VALUE "4- Puntos Vida: ".
+               10 WS-HM-C-HP           PIC 9(02) VALUE ZEROES.
+           05 WS-HM-FOOTER.
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(09) VALUE "0- Salir".
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(01) VALUE X"0A".
+               10 FILLER               PIC X(21)
+                                         VALUE "Escoge una opcion: ".
       ******************************************************************
        LINKAGE SECTION.
        01 LS-HEROE.
-           05 LS-H-ID                PIC 9(02).
-           05 LS-H-STRENGTH          PIC 9(02).
-           05 LS-H-AGILITY           PIC 9(02).
-           05 LS-H-LEVEL             PIC 9(02).
-           05 LS-H-HP                PIC S9(02).
+           05 LS-H-ID                  PIC 9(02).
+           05 LS-H-STRENGTH            PIC 9(02).
+           05 LS-H-AGILITY             PIC 9(02).
+           05 LS-H-LEVEL               PIC 9(02).
+           05 LS-H-HP                  PIC S9(02).
       ******************************************************************
        PROCEDURE DIVISION USING LS-HEROE.
        MAIN-PROCEDURE.
-           PERFORM DISPLAY-H-ALL-CONTENTS.
-           PERFORM DISPLAY-HEROES-MENU UNTIL WS-H-OP-EXIT.
+           SET WS-HM-OP-CONTINUE TO TRUE.
+           PERFORM DISPLAY-MENU UNTIL WS-HM-OP-EXIT.
            EXIT PROGRAM.
       ******************************************************************
-       DISPLAY-H-ALL-CONTENTS.
-           DISPLAY H-MENU-TITLE.
-           DISPLAY STRENGTH LS-H-STRENGTH.
-           DISPLAY AGILITY LS-H-AGILITY.
-           DISPLAY LEVEL LS-H-LEVEL.
-           DISPLAY HP NO ADVANCING.
+       DISPLAY-MENU.
+           MOVE LS-H-STRENGTH TO WS-HM-C-STRENGTH.
+           MOVE LS-H-AGILITY TO WS-HM-C-AGILITY.
+           MOVE LS-H-LEVEL TO WS-HM-C-LEVEL.
            IF LS-H-HP < 0 THEN
-               DISPLAY "00"
+               MOVE 0 TO WS-HM-C-HP
            ELSE
-               DISPLAY LS-H-HP
+               MOVE LS-H-HP TO WS-HM-C-HP
            END-IF.
-           DISPLAY H-MENU-FOOTER.
-           ACCEPT WS-H-OPTION.
-      ******************************************************************
-       DISPLAY-HEROES-MENU.
+
+           DISPLAY WS-HM-TITLE.
+           DISPLAY WS-HM-CONTENT.
+           DISPLAY WS-HM-FOOTER.
+
+           ACCEPT WS-HM-OPTION.
+
            EVALUATE TRUE
-               WHEN WS-H-OP-STRENGTH
-                   DISPLAY "[" WS-GAME-NAME "] "
+               WHEN WS-HM-OP-STRENGTH
+                   DISPLAY "["WS-GAME-NAME"] "
                      "Selecciona el nuevo valor de Fuerza: "
-                   DISPLAY "- Valor antiguo: " LS-H-STRENGTH
-                   ACCEPT NEW-VALUE
-                   DISPLAY "- Nuevo valor: " NEW-VALUE
-                   SET LS-H-STRENGTH TO NEW-VALUE
-                   PERFORM DISPLAY-H-ALL-CONTENTS
-               WHEN WS-H-OP-AGILITY
-                   DISPLAY "[" WS-GAME-NAME "] "
+                   DISPLAY "- Valor antiguo: "WS-HM-C-STRENGTH
+                   DISPLAY "- Nuevo valor: "
+                   ACCEPT LS-H-STRENGTH
+
+               WHEN WS-HM-OP-AGILITY
+                   DISPLAY "["WS-GAME-NAME"] "
                      "Selecciona el nuevo valor de Agilidad: "
-                   DISPLAY "- Valor antiguo: " LS-H-AGILITY
-                   ACCEPT NEW-VALUE
-                   DISPLAY "- Nuevo valor: " NEW-VALUE
-                   SET LS-H-AGILITY TO NEW-VALUE
-                   PERFORM DISPLAY-H-ALL-CONTENTS
-               WHEN WS-H-OP-LEVEL
-                   DISPLAY "[" WS-GAME-NAME "] "
+                   DISPLAY "- Valor antiguo: "WS-HM-C-AGILITY
+                   DISPLAY "- Nuevo valor: "
+                   ACCEPT LS-H-AGILITY
+               WHEN WS-HM-OP-LEVEL
+                   DISPLAY "["WS-GAME-NAME"] "
                      "Selecciona el nuevo valor de Nivel: "
-                   DISPLAY "- Valor antiguo: " LS-H-LEVEL
-                   ACCEPT NEW-VALUE
-                   DISPLAY "- Nuevo valor: " NEW-VALUE
-                   SET LS-H-LEVEL TO NEW-VALUE
-                   PERFORM DISPLAY-H-ALL-CONTENTS
-               WHEN WS-H-OP-HP
-                   DISPLAY "[" WS-GAME-NAME "] "
+                   DISPLAY "- Valor antiguo: "WS-HM-C-LEVEL
+                   DISPLAY "- Nuevo valor: "
+                   ACCEPT LS-H-LEVEL
+               WHEN WS-HM-OP-HP
+                   DISPLAY "["WS-GAME-NAME"] "
                      "Selecciona el nuevo valor de Vida: "
-                   DISPLAY "- Valor antiguo: " LS-H-HP
-                   ACCEPT NEW-VALUE
-                   DISPLAY "- Nuevo valor: " NEW-VALUE
-                   SET LS-H-HP TO NEW-VALUE
-                   PERFORM DISPLAY-H-ALL-CONTENTS
-               WHEN WS-H-OP-EXIT
+                   DISPLAY "- Valor antiguo: "WS-HM-C-HP
+                   DISPLAY "- Nuevo valor: "
+                   ACCEPT LS-H-HP
+               WHEN WS-HM-OP-EXIT
                     EXIT PROGRAM
            END-EVALUATE.
+
+      ******************************************************************
+       END PROGRAM MOD-HEROE.

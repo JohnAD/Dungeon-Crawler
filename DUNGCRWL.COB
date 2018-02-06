@@ -41,9 +41,9 @@
                88 WS-H-FS-OK         VALUE "00".
                88 WS-H-FS-EOF        VALUE HIGH-VALUE.
            05 WS-HERO-PROFESSION   PIC X(02) VALUE SPACES.
-               88 WS-H-P-GUERRERO  VALUE "34".
-               88 WS-H-P-ARQUERO   VALUE "44".
-               88 WS-H-P-MAGO      VALUE "45".
+               88 WS-H-P-GUERRERO    VALUE "34".
+               88 WS-H-P-ARQUERO     VALUE "44".
+               88 WS-H-P-MAGO        VALUE "45".
            05 WS-HEROES-REG.
                10 WS-H-R-LENGTH    PIC 9(01) VALUE ZERO.
                10 WS-H-R-INDEX     PIC 9(01) VALUE ZERO.
@@ -58,8 +58,8 @@
                    15 WS-H-R-PROFESSION        PIC 9(02) VALUE ZERO.
        01 WS-MONSTERS-FILE.
            05 WS-MONSTERS-FS       PIC X(02) VALUE ZEROES.
-               88 WS-M-FS-OK       VALUE "00".
-               88 WS-M-FS-EOF      VALUE HIGH-VALUE.
+               88 WS-M-FS-OK         VALUE "00".
+               88 WS-M-FS-EOF        VALUE HIGH-VALUE.
            05 WS-MONSTERS-REG.
                10 WS-M-R-LENGTH    PIC 9(01) VALUE ZERO.
                10 WS-M-R-INDEX     PIC 9(01) VALUE ZERO.

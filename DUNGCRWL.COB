@@ -191,6 +191,7 @@
            DISPLAY INTRO.
            ACCEPT INTRO.
            DISPLAY LIMPIAR-PANTALLA.
+      *>      ACCEPT PAUSAR WITH AUTO.
       ******************************************************************
        DISPLAY-MONSTERS.
            DISPLAY "LOADED MONSTERS FILE:"WS-M-R-LENGTH
@@ -204,7 +205,7 @@
       ******************************************************************
       * == [DISPLAY-MAIN-MENU] ===================================BEGIN=
        DISPLAY-MAIN-MENU.
-           DISPLAY WS-MM.
+           DISPLAY WS-MM LINE 05 COL 35.
            ACCEPT WS-MM-OPTION.
 
            EVALUATE TRUE

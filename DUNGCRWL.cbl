@@ -297,14 +297,15 @@
           MOVE WS-VALID-OPTION TO WS-HM-ERROR.
       ******************************************************************
        DISPLAY-MODIFY-HERO.
+           SET WS-MHM-OP-CONTINUE TO TRUE
+           SET WS-RESET-VALID-OPTION TO TRUE
            IF WS-H-R-CURRENT > 0 THEN
-               SET WS-MHM-OP-CONTINUE TO TRUE
-               SET WS-RESET-VALID-OPTION TO TRUE
                PERFORM DISPLAY-MOD-HEROES-MENU UNTIL WS-MHM-OP-EXIT
            ELSE
                DISPLAY "["WS-GAME-NAME"] "
                  "Primero debes seleccionar un heroe!"
-           END-IF.
+           END-IF
+           SET WS-RESET-VALID-OPTION TO TRUE.
       ******************************************************************
        PLAY.
            IF WS-H-R-CURRENT > 0 THEN

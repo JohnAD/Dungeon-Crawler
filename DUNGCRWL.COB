@@ -140,35 +140,71 @@
                10 FILLER           PIC X(02) VALUE "):".
        77 OPCION PIC X VALUE SPACES.
        77 PAUSAR PIC X VALUE SPACES.
+       01 DAT-TODAY    PIC 9(8).
+       01 DAT-TODAY2   PIC 9(8).
+       01 TIME-TODAY   PIC 9(8).
+       01 TIME-TODAY2  PIC 9(8).
+       01 WRK-ONE-DAY  PIC 9(8).
+       01 DELTA-TIME   PIC 9(8).
       ******************************************************************
        SCREEN SECTION.
        01 INTRO.
-           03 LINE 04 COL 10 VALUE "______".
-           03 LINE 05 COL 10 VALUE "|  _  \".
-           03 LINE 06 COL 10 VALUE
-             "| | | |_   _ _ __   __ _  ___  ___  _ __".
-           03 LINE 07 COL 10 VALUE
-             "| | | | | | | '_ \ / _` |/ _ \/ _ \| '_ \".
-           03 LINE 08 COL 10 VALUE
-             "| |/ /| |_| | | | | (_| |  __/ (_) | | | |".
-           03 LINE 09 COL 10 VALUE
-             "|___/  \__,_|_| |_|\__, |\___|\___/|_| |_|".
-           03 LINE 10 COL 10 VALUE "                    __/ |".
-           03 LINE 11 COL 10 VALUE "                   |___/".
-           03 LINE 12 COL 10 VALUE "   _____                    _".
-           03 LINE 13 COL 10 VALUE "  /  __ \                  | |".
-           03 LINE 14 COL 10 VALUE
-             "  | /  \/_ __ __ ___      _| | ___ _ __".
-           03 LINE 15 COL 10 VALUE
-             "  | |   | '__/ _` \ \ /\ / / |/ _ \ '__|".
-           03 LINE 16 COL 10 VALUE
-            "  | \__/\ | | (_| |\ V  V /| |  __/ |".
-           03 LINE 17 COL 10 VALUE
-             "   \____/_|  \__,_| \_/\_/ |_|\___|_|".
-           03 LINE 21 COL 40 VALUE "Made by Juan Ramon, Juanjo Sanchez".
-           03 LINE 25 COL 20 VALUE
-             "PULSE CUALQUIER TECLA PARA CONTINUAR...".
-           03 PIC X USING OPCION.
+           05 TITLE-1.
+               10 LINE 02 COL 10 VALUE "______" FOREGROUND-COLOR IS 6.
+               10 LINE 03 COL 10 VALUE "|  _  \" FOREGROUND-COLOR IS 6.
+               10 LINE 04 COL 10 VALUE
+                 "| | | |_   _ _ __   __ _  ___  ___  _ __"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 05 COL 10 VALUE
+                 "| | | | | | | '_ \ / _` |/ _ \/ _ \| '_ \"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 06 COL 10 VALUE
+                 "| |/ /| |_| | | | | (_| |  __/ (_) | | | |"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 07 COL 10 VALUE
+                 "|___/  \__,_|_| |_|\__, |\___|\___/|_| |_|"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 08 COL 10 VALUE "                    __/ |"
+               FOREGROUND-COLOR IS 6.
+               10 LINE 09 COL 10 VALUE "                   |___/"
+               FOREGROUND-COLOR IS 6.
+           05 TITLE-2.
+               10 LINE 10 COL 10 VALUE
+                 "           _____                    _"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 11 COL 10 VALUE
+                 "          /  __ \                  | |"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 12 COL 10 VALUE
+                 "          | /  \/_ __ __ ___      _| | ___ _ __ ©"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 13 COL 10 VALUE
+                 "          | |   | '__/ _` \ \ /\ / / |/ _ \ '__|"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 14 COL 10 VALUE
+                 "          | \__/\ | | (_| |\ V  V /| |  __/ |"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 15 COL 10 VALUE
+                 "           \____/_|  \__,_| \_/\_/ |_|\___|_|"
+                 FOREGROUND-COLOR IS 6.
+           05 TITLE-3.
+               10 LINE 18 COL 40 VALUE
+                 "Hecho por Juan Ramon & Juanjo Sanchez"
+                 FOREGROUND-COLOR IS 2.
+           05 TITLE-4.
+               10 LINE 20 COL 15 VALUE
+                 "              />" FOREGROUND-COLOR IS 3.
+               10 LINE 21 COL 15 VALUE
+                 " ()          //----------------------------------("
+                 FOREGROUND-COLOR IS 3.
+               10 LINE 22 COL 15 VALUE
+                 "(*)OXOXOX(*>      PULSE ENTER PARA CONTINUAR      \".
+               10 LINE 23 COL 15 VALUE
+                  "()          \\------------------------------------)"
+                  FOREGROUND-COLOR IS 3.
+               10 LINE 24 COL 15 VALUE
+                 "              \>" FOREGROUND-COLOR IS 3.
+           05 PIC X USING OPCION.
        01 LIMPIAR-PANTALLA.
            03 BLANK SCREEN.
       ******************************************************************
@@ -184,17 +220,22 @@
                    PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT
                END-IF
            END-IF
-
            GO TO STOP-RUN.
       ******************************************************************
        DISPLAY-INTRO.
-           DISPLAY INTRO.
+           DISPLAY TITLE-1.
+           PERFORM PAUSA.
+           DISPLAY TITLE-2.
+           PERFORM PAUSA.
+           DISPLAY TITLE-3.
+           PERFORM PAUSA.
+           DISPLAY TITLE-4.
            ACCEPT INTRO.
            DISPLAY LIMPIAR-PANTALLA.
-      *>      ACCEPT PAUSAR WITH AUTO.
+           *>ACCEPT PAUSAR WITH AUTO.
       ******************************************************************
        DISPLAY-MONSTERS.
-           DISPLAY "LOADED MONSTERS FILE:"WS-M-R-LENGTH
+           DISPLAY "LOADED MONSTERS FILE: " WS-M-R-LENGTH
            DISPLAY "--------"
            PERFORM VARYING WS-M-R-INDEX FROM 1 BY 1
                UNTIL WS-M-R-INDEX > WS-M-R-LENGTH
@@ -211,7 +252,7 @@
            EVALUATE TRUE
            WHEN WS-MM-OP-SELECT
                PERFORM DISPLAY-SELECT-HERO
-      *         DISPLAY "SELECTED HERO: "WS-H-R-CURRENT
+               DISPLAY "HEROE SELECCIONADO: " WS-H-R-CURRENT
            WHEN WS-MM-OP-MODIFY
                PERFORM DISPLAY-MODIFY-HERO
            WHEN WS-MM-OP-PLAY
@@ -422,6 +463,24 @@
            DISPLAY "["WS-GAME-NAME"] Fichero MONSTERS no disponible.".
       * == [INIT--WS-MONSTERS-R--CONTENT] ==========================END=
 
+      ******************************************************************
+       PAUSA.
+           ACCEPT DAT-TODAY FROM DATE.
+           ACCEPT TIME-TODAY FROM TIME.
+           MOVE 0 TO WRK-ONE-DAY.
+           PERFORM UNTIL DELTA-TIME > 00000050
+               ACCEPT DAT-TODAY2 FROM DATE
+               IF DAT-TODAY2 > DAT-TODAY
+                   MOVE 24000000   TO WRK-ONE-DAY
+               END-IF
+               ACCEPT TIME-TODAY2 FROM TIME
+               COMPUTE DELTA-TIME = (TIME-TODAY2 + WRK-ONE-DAY
+               - TIME-TODAY)
+           END-PERFORM.
+           PERFORM RESETEAR.
+      ******************************************************************
+       RESETEAR.
+           MOVE 0 TO DELTA-TIME.
       ******************************************************************
        STOP-RUN.
            STOP RUN.

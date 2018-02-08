@@ -37,8 +37,10 @@
            05 WS-MAX-HEROES            PIC 9(02) VALUE 7.
            05 WS-MAX-MONSTERS          PIC 9(02) VALUE 10.
            05 WS-INPUT_CURSOR_SCREEN_POS.
-               10 WS-ICSP_LINE         PIC 9(02) VALUE 4.
-               10 WS-ICSP_COL          PIC 9(02) VALUE 20.
+               10 WS-ICSP-1-LINE         PIC 9(02) VALUE 4.
+               10 WS-ICSP-1-COL        PIC 9(02) VALUE 20.
+               10 WS-ICSP-2-LINE       PIC 9(02) VALUE 7.
+               10 WS-ICSP-2-COL        PIC 9(02) VALUE 14.
            05 WS-DISPLAY-SHIFT.
                10 WS-HEROES-MENU-TITLE-SHIFT PIC 9(02) VALUE 6.
                10 WS-HEROES-MENU-CONTENT-SHIFT PIC 9(02) VALUE 2.
@@ -177,6 +179,22 @@
                10 FILLER           PIC X(18) VALUE "Escoge una opcion:".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(01) VALUE X"0A".
+           05 WS-MHM-SELECTION-TITLE.
+               10 FILLER           PIC X(16)
+                                     VALUE "MODIFICAR HEROE ".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(15) VALUE ALL "-".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(30)
+                 VALUE "Selecciona el nuevo valor de: ".
+               10 WS-MHM-SEL-TIT-MODIFYING  PIC X(11) VALUE ALL SPACES.
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(15) VALUE "Antiguo valor: ".
+               10 WS-MHM-SEL-TIT-NEWVALUE PIC X(10) VALUE ALL SPACES.
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(13) VALUE "Nuevo valor: ".
            05 WS-MHM-CONTENT.
                10 FILLER               PIC X(11) VALUE "1- Fuerza: ".
                10 WS-MHM-C-STRENGTH    PIC 9(02) VALUE ZEROES.
@@ -247,7 +265,7 @@
            DISPLAY WS-MM LINE 1 COL 1.
 
            SET WS-RESET-VALID-OPTION TO TRUE
-           ACCEPT WS-MM-OPTION LINE WS-ICSP_LINE COL WS-ICSP_COL.
+           ACCEPT WS-MM-OPTION LINE WS-ICSP-1-LINE COL WS-ICSP-1-COL.
            DISPLAY SS-CLEAR-SCREEN.
 
            EVALUATE TRUE
@@ -323,7 +341,7 @@
            PERFORM DISPLAY-HEROES-MENU-TITLE.
            PERFORM DISPLAY-HEROES-MENU-CONTENT.
            PERFORM DISPLAY-HEROES-MENU-FOOTER.
-           ACCEPT WS-H-OPTION LINE WS-ICSP_LINE COL WS-ICSP_COL.
+           ACCEPT WS-H-OPTION LINE WS-ICSP-1-LINE COL WS-ICSP-1-COL.
 
            IF NOT (1 <= WS-H-OPTION AND WS-H-OPTION <= WS-H-R-LENGTH)
              THEN
@@ -496,39 +514,51 @@
            DISPLAY WS-MHM-FOOTER LINE WS-AUX-NUMBER COL 1.
 
            SET WS-RESET-VALID-OPTION TO TRUE
-           ACCEPT WS-MHM-OPTION LINE WS-ICSP_LINE COL WS-ICSP_COL.
+           ACCEPT WS-MHM-OPTION LINE WS-ICSP-1-LINE COL WS-ICSP-1-COL.
 
            DISPLAY SS-CLEAR-SCREEN.
 
            EVALUATE TRUE
-               WHEN WS-MHM-OP-STRENGTH
-                   DISPLAY "["WS-GAME-NAME"] "
-                     "Selecciona el nuevo valor de Fuerza: "
-                   DISPLAY "- Valor antiguo: "WS-MHM-C-STRENGTH
-                   DISPLAY "- Nuevo valor: "
-                   ACCEPT WS-H-R-STRENGTH(WS-H-R-CURRENT)
+           WHEN WS-MHM-OP-STRENGTH
+               MOVE WS-H-R-STRENGTH(WS-H-R-CURRENT)
+                 TO WS-MHM-SEL-TIT-NEWVALUE
 
-               WHEN WS-MHM-OP-AGILITY
-                   DISPLAY "["WS-GAME-NAME"] "
-                     "Selecciona el nuevo valor de Agilidad: "
-                   DISPLAY "- Valor antiguo: "WS-MHM-C-AGILITY
-                   DISPLAY "- Nuevo valor: "
-                   ACCEPT WS-H-R-AGILITY(WS-H-R-CURRENT)
-               WHEN WS-MHM-OP-LEVEL
-                   DISPLAY "["WS-GAME-NAME"] "
-                     "Selecciona el nuevo valor de Nivel: "
-                   DISPLAY "- Valor antiguo: "WS-MHM-C-LEVEL
-                   DISPLAY "- Nuevo valor: "
-                   ACCEPT WS-H-R-LEVEL(WS-H-R-CURRENT)
-               WHEN WS-MHM-OP-HP
-                   DISPLAY "["WS-GAME-NAME"] "
-                     "Selecciona el nuevo valor de Vida: "
-                   DISPLAY "- Valor antiguo: "WS-MHM-C-HP
-                   DISPLAY "- Nuevo valor: "
-                   ACCEPT WS-H-R-HP(WS-H-R-CURRENT)
-               WHEN OTHER
-                   SET WS-INVALID-OPTION TO TRUE
-           END-EVALUATE.
+               MOVE "Fuerza" TO WS-MHM-SEL-TIT-MODIFYING
+               DISPLAY WS-MHM-SELECTION-TITLE LINE 1 COL 1
+
+               ACCEPT WS-H-R-STRENGTH(WS-H-R-CURRENT)
+                 LINE WS-ICSP-2-LINE COL WS-ICSP-2-COL
+           WHEN WS-MHM-OP-AGILITY
+               MOVE WS-H-R-AGILITY(WS-H-R-CURRENT)
+                 TO WS-MHM-SEL-TIT-NEWVALUE
+
+               MOVE "Agilidad" TO WS-MHM-SEL-TIT-MODIFYING
+               DISPLAY WS-MHM-SELECTION-TITLE LINE 1 COL 1
+
+               ACCEPT WS-H-R-AGILITY(WS-H-R-CURRENT)
+                 LINE WS-ICSP-2-LINE COL WS-ICSP-2-COL
+           WHEN WS-MHM-OP-LEVEL
+               MOVE WS-H-R-LEVEL(WS-H-R-CURRENT)
+                 TO WS-MHM-SEL-TIT-NEWVALUE
+
+               MOVE "Nivel" TO WS-MHM-SEL-TIT-MODIFYING
+               DISPLAY WS-MHM-SELECTION-TITLE LINE 1 COL 1
+
+               ACCEPT WS-H-R-LEVEL(WS-H-R-CURRENT)
+                 LINE WS-ICSP-2-LINE COL WS-ICSP-2-COL
+           WHEN WS-MHM-OP-HP
+               MOVE WS-H-R-HP(WS-H-R-CURRENT)
+                 TO WS-MHM-SEL-TIT-NEWVALUE
+
+               MOVE "Puntos Vida" TO WS-MHM-SEL-TIT-MODIFYING
+               DISPLAY WS-MHM-SELECTION-TITLE LINE 1 COL 1
+
+               ACCEPT WS-H-R-HP(WS-H-R-CURRENT)
+                 LINE WS-ICSP-2-LINE COL WS-ICSP-2-COL
+           WHEN OTHER
+               SET WS-INVALID-OPTION TO TRUE
+           END-EVALUATE
+           DISPLAY SS-CLEAR-SCREEN.
       ******************************************************************
        SET-MENU-ERROR.
            MOVE WS-VALID-OPTION TO WS-MHM-ERROR.

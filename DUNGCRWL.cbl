@@ -42,6 +42,7 @@
            05 WS-DISPLAY-SHIFT.
                10 WS-HEROES-MENU-TITLE-SHIFT PIC 9(02) VALUE 6.
                10 WS-HEROES-MENU-CONTENT-SHIFT PIC 9(02) VALUE 2.
+               10 WS-MHM-TITLE-SHIFT   PIC 9(02) VALUE 6.
        01 WS-AUX.
            05 WS-AUX-NUMBER            PIC 9(05) VALUE ZERO.
        01 WS-HEROES-FILE.
@@ -166,11 +167,16 @@
                88 WS-MHM-OP-LEVEL        VALUE "3".
                88 WS-MHM-OP-HP           VALUE "4".
            05 WS-MHM-TITLE.
-               10 FILLER               PIC X(17)
-                                         VALUE "MODIFICAR HEROE: ".
-               10 WS-MHM-ERROR         PIC X(28) VALUE ALL SPACES.
-               10 FILLER               PIC X(01) VALUE X"0A".
-               10 FILLER               PIC X(17) VALUE ALL "-".
+               10 FILLER           PIC X(16)
+                                     VALUE "MODIFICAR HEROE ".
+               10 WS-MHM-ERROR     PIC X(28) VALUE ALL SPACES.
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(15) VALUE ALL "-".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(18) VALUE "Escoge una opcion:".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(01) VALUE X"0A".
            05 WS-MHM-CONTENT.
                10 FILLER               PIC X(11) VALUE "1- Fuerza: ".
                10 WS-MHM-C-STRENGTH    PIC 9(02) VALUE ZEROES.
@@ -187,10 +193,6 @@
            05 WS-MHM-FOOTER.
                10 FILLER               PIC X(01) VALUE X"0A".
                10 FILLER               PIC X(09) VALUE "0- Salir".
-               10 FILLER               PIC X(01) VALUE X"0A".
-               10 FILLER               PIC X(01) VALUE X"0A".
-               10 FILLER               PIC X(21)
-                                         VALUE "Escoge una opcion: ".
        01 WS-PAUSE-MECHANISM.
            05 WS-PM-NOW-1.
                10 WS-PM-NOW-1-DATE     PIC 9(08) VALUE ZERO.
@@ -353,12 +355,7 @@
        DISPLAY-MODIFY-HERO.
            SET WS-MHM-OP-CONTINUE TO TRUE
            SET WS-RESET-VALID-OPTION TO TRUE
-           IF WS-H-R-CURRENT > 0 THEN
-               PERFORM DISPLAY-MOD-HEROES-MENU UNTIL WS-MHM-OP-EXIT
-           ELSE
-               DISPLAY "["WS-GAME-NAME"] "
-                 "Primero debes seleccionar un heroe!"
-           END-IF
+           PERFORM DISPLAY-MOD-HEROES-MENU UNTIL WS-MHM-OP-EXIT
            SET WS-RESET-VALID-OPTION TO TRUE.
       ******************************************************************
        PLAY.
@@ -490,12 +487,18 @@
            END-IF.
 
            PERFORM SET-MENU-ERROR.
-           DISPLAY WS-MHM-TITLE.
-           DISPLAY WS-MHM-CONTENT.
-           DISPLAY WS-MHM-FOOTER.
+           DISPLAY WS-MHM-TITLE LINE 1 COL 1.
+
+           COMPUTE WS-AUX-NUMBER = WS-MHM-TITLE-SHIFT.
+           DISPLAY WS-MHM-CONTENT LINE WS-AUX-NUMBER COL 1.
+
+           COMPUTE WS-AUX-NUMBER = WS-MHM-TITLE-SHIFT + 4.
+           DISPLAY WS-MHM-FOOTER LINE WS-AUX-NUMBER COL 1.
 
            SET WS-RESET-VALID-OPTION TO TRUE
-           ACCEPT WS-MHM-OPTION.
+           ACCEPT WS-MHM-OPTION LINE WS-ICSP_LINE COL WS-ICSP_COL.
+
+           DISPLAY SS-CLEAR-SCREEN.
 
            EVALUATE TRUE
                WHEN WS-MHM-OP-STRENGTH

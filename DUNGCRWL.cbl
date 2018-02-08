@@ -36,6 +36,14 @@
                                          VALUE "Dungeon Crawler".
            05 WS-MAX-HEROES            PIC 9(02) VALUE 7.
            05 WS-MAX-MONSTERS          PIC 9(02) VALUE 10.
+           05 WS-INPUT_CURSOR_SCREEN_POS.
+               10 WS-ICSP_LINE         PIC 9(02) VALUE 4.
+               10 WS-ICSP_COL          PIC 9(02) VALUE 20.
+           05 WS-DISPLAY-SHIFT.
+               10 WS-HEROES-MENU-TITLE-SHIFT PIC 9(02) VALUE 6.
+               10 WS-HEROES-MENU-CONTENT-SHIFT PIC 9(02) VALUE 2.
+       01 WS-AUX.
+           05 WS-AUX-NUMBER            PIC 9(05) VALUE ZERO.
        01 WS-HEROES-FILE.
            05 WS-HEROES-FS         PIC X(02) VALUE ZEROES.
                88 WS-H-FS-OK         VALUE "00".
@@ -76,6 +84,9 @@
            88 WS-RESET-VALID-OPTION    VALUE ALL SPACES.
            88 WS-INVALID-OPTION
              VALUE "[Escoge una opcion correcta]".
+       01 WS-SHOW-SELECTED-HERO-OPTION PIC X(08) VALUE ALL SPACES.
+           88 WS-RESET-SELECTED-HERO-OPTION   VALUE ALL SPACES.
+           88 WS-SELECTED-HERO-OPTION   VALUE "con ID: ".
        01 WS-MAIN-MENU.
            05 WS-MM-OPTION             PIC X(01) VALUE SPACE.
                88 WS-MM-OP-EXIT          VALUE "0".
@@ -89,10 +100,17 @@
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(14) VALUE ALL "-".
                10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(18) VALUE "Escoge una opcion:".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(20)
                  VALUE "1- Seleccionar heroe".
                10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(18) VALUE "2- Modificar heroe".
+               10 FILLER           PIC X(19)
+                 VALUE "2- Modificar heroe ".
+               10 WS-MM-PREFIX     PIC X(08) VALUE SPACES.
+               10 WS-MM-HERO-ID    PIC X(02) VALUE SPACES.
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(16) VALUE "3- A la batalla!".
                10 FILLER           PIC X(01) VALUE X"0A".
@@ -108,6 +126,9 @@
                10 WS-HM-ERROR      PIC X(28) VALUE ALL SPACES.
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(17) VALUE ALL "-".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(01) VALUE X"0A".
+               10 FILLER           PIC X(18) VALUE "Escoge una opcion:".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(52)
@@ -134,11 +155,6 @@
            05 WS-HEROES-MENU-FOOTER.
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(09) VALUE "0- Salir".
-               10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(21)
-                 VALUE "Escoge un heroe (1 - ".
-               10 WS-HMF-LENGTH    PIC 9(01).
-               10 FILLER           PIC X(02) VALUE "):".
        01 WS-MOD-HEROES-MENU.
            05 WS-MHM-OPTION            PIC X(01) VALUE SPACE.
                88 WS-MHM-OP-CONTINUE     VALUE SPACE.
@@ -182,6 +198,9 @@
                10 WS-PM-NOW-2-TIME     PIC 9(08) VALUE ZERO.
            05 WS-PM-WRK-ONE-DAY        PIC 9(08) VALUE ZERO.
            05 WS-PM-DELTA-TIME         PIC 9(08) VALUE ZERO.
+       SCREEN SECTION.
+       01 SS-CLEAR-SCREEN.
+           05 BLANK SCREEN.
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
@@ -212,11 +231,20 @@
       * == [DISPLAY-MAIN-MENU] ===================================BEGIN=
        DISPLAY-MAIN-MENU.
            PERFORM SET-MAIN-MENU-ERROR
-           DISPLAY WS-MM.
+           IF WS-H-R-CURRENT > 0 THEN
+               SET WS-SELECTED-HERO-OPTION TO TRUE
+               MOVE WS-SHOW-SELECTED-HERO-OPTION TO WS-MM-PREFIX
+               MOVE WS-H-R-ID(WS-H-R-CURRENT) TO WS-MM-HERO-ID
+           ELSE
+               SET WS-RESET-SELECTED-HERO-OPTION TO TRUE
+               MOVE WS-SHOW-SELECTED-HERO-OPTION TO WS-MM-PREFIX
+               MOVE SPACE TO WS-MM-HERO-ID
+           END-IF.
+           DISPLAY WS-MM LINE 1 COL 1.
 
            SET WS-RESET-VALID-OPTION TO TRUE
-           ACCEPT WS-MM-OPTION.
-
+           ACCEPT WS-MM-OPTION LINE WS-ICSP_LINE COL WS-ICSP_COL.
+       DISPLAY SS-CLEAR-SCREEN.
            EVALUATE TRUE
            WHEN WS-MM-OP-SELECT
                PERFORM DISPLAY-SELECT-HERO
@@ -230,7 +258,8 @@
                PERFORM EXIT-GAME
            WHEN OTHER
                SET WS-INVALID-OPTION TO TRUE
-           END-EVALUATE.
+           END-EVALUATE
+           DISPLAY SS-CLEAR-SCREEN.
       ******************************************************************
        SET-MAIN-MENU-ERROR.
            MOVE WS-VALID-OPTION TO WS-MM-ERROR.
@@ -274,32 +303,40 @@
                MOVE "  MAGO  " TO WS-HMC-PROFESSION
            END-EVALUATE
 
-           DISPLAY WS-HEROES-MENU-CONTENT.
+           ADD 1 TO WS-AUX-NUMBER.
+           DISPLAY WS-HEROES-MENU-CONTENT
+             LINE WS-AUX-NUMBER COL 1.
       ******************************************************************
        DISPLAY-HEROES-MENU.
            PERFORM SET-LIST-HEROES-MENU-TO-ERROR.
            PERFORM DISPLAY-HEROES-MENU-TITLE.
            PERFORM DISPLAY-HEROES-MENU-CONTENT.
            PERFORM DISPLAY-HEROES-MENU-FOOTER.
-           ACCEPT WS-H-OPTION.
+           ACCEPT WS-H-OPTION LINE WS-ICSP_LINE COL WS-ICSP_COL.
 
            IF NOT (1 <= WS-H-OPTION AND WS-H-OPTION <= WS-H-R-LENGTH)
              THEN
                SET WS-INVALID-OPTION TO TRUE
            ELSE
                SET WS-RESET-VALID-OPTION TO TRUE
-           END-IF.
+           END-IF
+           DISPLAY SS-CLEAR-SCREEN.
       ******************************************************************
        DISPLAY-HEROES-MENU-TITLE.
-           DISPLAY WS-HEROES-MENU-TITLE.
+           DISPLAY WS-HEROES-MENU-TITLE LINE 1 COL 1.
       ******************************************************************
        DISPLAY-HEROES-MENU-CONTENT.
+           MOVE WS-HEROES-MENU-TITLE-SHIFT TO WS-AUX-NUMBER.
+           ADD WS-HEROES-MENU-CONTENT-SHIFT TO WS-AUX-NUMBER.
+
            PERFORM DISPLAY--WS-HEROES-R VARYING WS-H-R-INDEX
              FROM 1 BY 1 UNTIL WS-H-R-INDEX > WS-H-R-LENGTH.
       ******************************************************************
        DISPLAY-HEROES-MENU-FOOTER.
-           MOVE WS-H-R-LENGTH TO WS-HMF-LENGTH.
-           DISPLAY WS-HEROES-MENU-FOOTER.
+           COMPUTE WS-AUX-NUMBER = WS-HEROES-MENU-TITLE-SHIFT
+             + WS-HEROES-MENU-CONTENT-SHIFT + WS-H-R-LENGTH + 1.
+           DISPLAY WS-HEROES-MENU-FOOTER
+             LINE WS-AUX-NUMBER COL 1.
       ******************************************************************
        SET-LIST-HEROES-MENU-TO-ERROR.
           MOVE WS-VALID-OPTION TO WS-HM-ERROR.

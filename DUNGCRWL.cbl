@@ -173,6 +173,15 @@
                10 FILLER               PIC X(01) VALUE X"0A".
                10 FILLER               PIC X(21)
                                          VALUE "Escoge una opcion: ".
+       01 WS-PAUSE-MECHANISM.
+           05 WS-PM-NOW-1.
+               10 WS-PM-NOW-1-DATE     PIC 9(08) VALUE ZERO.
+               10 WS-PM-NOW-1-TIME     PIC 9(08) VALUE ZERO.
+           05 WS-PM-NOW-2.
+               10 WS-PM-NOW-2-DATE     PIC 9(08) VALUE ZERO.
+               10 WS-PM-NOW-2-TIME     PIC 9(08) VALUE ZERO.
+           05 WS-PM-WRK-ONE-DAY        PIC 9(08) VALUE ZERO.
+           05 WS-PM-DELTA-TIME         PIC 9(08) VALUE ZERO.
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
@@ -199,7 +208,6 @@
                DISPLAY WS-MONSTERS-R(WS-M-R-INDEX)
            END-PERFORM
            DISPLAY "--------".
-
       ******************************************************************
       * == [DISPLAY-MAIN-MENU] ===================================BEGIN=
        DISPLAY-MAIN-MENU.
@@ -475,6 +483,24 @@
       ******************************************************************
        SET-MENU-ERROR.
            MOVE WS-VALID-OPTION TO WS-MHM-ERROR.
+      *****************************************************************
+       PAUSA.
+           ACCEPT WS-PM-NOW-1-DATE FROM DATE.
+           ACCEPT WS-PM-NOW-1-TIME FROM TIME.
+           MOVE 0 TO WS-PM-WRK-ONE-DAY.
+           PERFORM UNTIL WS-PM-DELTA-TIME > 00000050
+               ACCEPT WS-PM-NOW-2-DATE FROM DATE
+               IF WS-PM-NOW-2-DATE > WS-PM-NOW-1-DATE
+                   MOVE 24000000 TO WS-PM-WRK-ONE-DAY
+               END-IF
+               ACCEPT WS-PM-NOW-2-TIME FROM TIME
+               COMPUTE WS-PM-DELTA-TIME = (WS-PM-NOW-2-TIME +
+               WS-PM-WRK-ONE-DAY - WS-PM-NOW-1-TIME)
+           END-PERFORM.
+           PERFORM RESETEAR.
+      ******************************************************************
+       RESETEAR.
+           MOVE 0 TO WS-PM-DELTA-TIME.
       ******************************************************************
        STOP-RUN.
            STOP RUN.

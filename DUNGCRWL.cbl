@@ -80,10 +80,12 @@
                    15 WS-M-R-LEVEL             PIC 9(02) VALUE ZERO.
                    15 WS-M-R-HP                PIC S9(02) VALUE ZERO.
                    15 WS-M-R-PROFESSION        PIC 9(02) VALUE ZERO.
-       01 WS-VALID-OPTION  PIC X(28)   VALUES ALL SPACES.
+       01 WS-VALID-OPTION  PIC X(37)   VALUES ALL SPACES.
            88 WS-RESET-VALID-OPTION    VALUE ALL SPACES.
            88 WS-INVALID-OPTION
              VALUE "[Escoge una opcion correcta]".
+           88 WS-MISSING-STEPS-OPTION
+             VALUE "[Primero debes seleccionar un heroe!]".
        01 WS-SHOW-SELECTED-HERO-OPTION PIC X(08) VALUE ALL SPACES.
            88 WS-RESET-SELECTED-HERO-OPTION   VALUE ALL SPACES.
            88 WS-SELECTED-HERO-OPTION   VALUE "con ID: ".
@@ -96,7 +98,7 @@
            05 WS-MM.
                10 FILLER               PIC X(15)
                                          VALUE "MENU PRINCIPAL".
-               10 WS-MM-ERROR      PIC X(28) VALUE ALL SPACES.
+               10 WS-MM-ERROR      PIC X(37) VALUE ALL SPACES.
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(14) VALUE ALL "-".
                10 FILLER           PIC X(01) VALUE X"0A".
@@ -244,15 +246,22 @@
 
            SET WS-RESET-VALID-OPTION TO TRUE
            ACCEPT WS-MM-OPTION LINE WS-ICSP_LINE COL WS-ICSP_COL.
-       DISPLAY SS-CLEAR-SCREEN.
+           DISPLAY SS-CLEAR-SCREEN.
+
            EVALUATE TRUE
            WHEN WS-MM-OP-SELECT
                PERFORM DISPLAY-SELECT-HERO
            WHEN WS-MM-OP-MODIFY
-               PERFORM DISPLAY-MODIFY-HERO
+               IF WS-M-R-CURRENT > 0 THEN
+                   PERFORM DISPLAY-MODIFY-HERO
+               ELSE
+                   SET WS-MISSING-STEPS-OPTION TO TRUE
+               END-IF
            WHEN WS-MM-OP-PLAY
-               IF WS-M-R-LENGTH > 0 THEN
+               IF WS-M-R-CURRENT > 0 THEN
                    PERFORM PLAY
+               ELSE
+                   SET WS-MISSING-STEPS-OPTION TO TRUE
                END-IF
            WHEN WS-MM-OP-EXIT
                PERFORM EXIT-GAME

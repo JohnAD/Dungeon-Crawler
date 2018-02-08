@@ -252,13 +252,13 @@
            WHEN WS-MM-OP-SELECT
                PERFORM DISPLAY-SELECT-HERO
            WHEN WS-MM-OP-MODIFY
-               IF WS-M-R-CURRENT > 0 THEN
+               IF WS-H-R-CURRENT > 0 THEN
                    PERFORM DISPLAY-MODIFY-HERO
                ELSE
                    SET WS-MISSING-STEPS-OPTION TO TRUE
                END-IF
            WHEN WS-MM-OP-PLAY
-               IF WS-M-R-CURRENT > 0 THEN
+               IF WS-H-R-CURRENT > 0 THEN
                    PERFORM PLAY
                ELSE
                    SET WS-MISSING-STEPS-OPTION TO TRUE

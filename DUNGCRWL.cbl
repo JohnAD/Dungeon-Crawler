@@ -261,6 +261,63 @@
        SCREEN SECTION.
        01 SS-CLEAR-SCREEN.
            05 BLANK SCREEN.
+       01 SS-INTRO.
+           05 SS-TITLE-1.
+               10 LINE 02 COL 10 VALUE "______" FOREGROUND-COLOR IS 6.
+               10 LINE 03 COL 10 VALUE "|  _  \" FOREGROUND-COLOR IS 6.
+               10 LINE 04 COL 10 VALUE
+                 "| | | |_   _ _ __   __ _  ___  ___  _ __"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 05 COL 10 VALUE
+                 "| | | | | | | '_ \ / _` |/ _ \/ _ \| '_ \"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 06 COL 10 VALUE
+                 "| |/ /| |_| | | | | (_| |  __/ (_) | | | |"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 07 COL 10 VALUE
+                 "|___/  \__,_|_| |_|\__, |\___|\___/|_| |_|"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 08 COL 10 VALUE "                    __/ |"
+               FOREGROUND-COLOR IS 6.
+               10 LINE 09 COL 10 VALUE "                   |___/"
+               FOREGROUND-COLOR IS 6.
+           05 SS-TITLE-2.
+               10 LINE 10 COL 10 VALUE
+                 "           _____                    _"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 11 COL 10 VALUE
+                 "          /  __ \                  | |"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 12 COL 10 VALUE
+                 "          | /  \/_ __ __ ___      _| | ___ _ __ ©"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 13 COL 10 VALUE
+                 "          | |   | '__/ _` \ \ /\ / / |/ _ \ '__|"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 14 COL 10 VALUE
+                 "          | \__/\ | | (_| |\ V  V /| |  __/ |"
+                 FOREGROUND-COLOR IS 6.
+               10 LINE 15 COL 10 VALUE
+                 "           \____/_|  \__,_| \_/\_/ |_|\___|_|"
+                 FOREGROUND-COLOR IS 6.
+           05 SS-TITLE-3.
+               10 LINE 18 COL 40 VALUE
+                 "Hecho por Juan Ramon & Juanjo Sanchez"
+                 FOREGROUND-COLOR IS 2.
+           05 SS-TITLE-4.
+               10 LINE 20 COL 15 VALUE
+                 "              />" FOREGROUND-COLOR IS 3.
+               10 LINE 21 COL 15 VALUE
+                 " ()          //----------------------------------("
+                 FOREGROUND-COLOR IS 3.
+               10 LINE 22 COL 15 VALUE
+                 "(*)OXOXOX(*>      PULSE ENTER PARA CONTINUAR      \".
+               10 LINE 23 COL 15 VALUE
+                  "()          \\------------------------------------)"
+                  FOREGROUND-COLOR IS 3.
+               10 LINE 24 COL 15 VALUE
+                 "              \>" FOREGROUND-COLOR IS 3 BEEP.
+           05 PIC X USING WS-AUX-ALPHA.
       ******************************************************************
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
@@ -269,6 +326,7 @@
                IF WS-M-FS-OK THEN
                    PERFORM INI--WS-IMG-FIGHT
                    PERFORM INI-CREDITS-ARRAY
+                   PERFORM DISPLAY-INTRO
                    PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT
                END-IF
            END-IF
@@ -685,6 +743,17 @@
              LINE 25 COL 1.
            ACCEPT WS-AUX-ALPHA
              LINE 25 COL 36.
+      ******************************************************************
+       DISPLAY-INTRO.
+           DISPLAY SS-TITLE-1.
+           PERFORM PAUSA.
+           DISPLAY SS-TITLE-2.
+           PERFORM PAUSA.
+           DISPLAY SS-TITLE-3.
+           PERFORM PAUSA.
+           DISPLAY SS-TITLE-4.
+           ACCEPT SS-INTRO.
+           DISPLAY SS-CLEAR-SCREEN.
       ******************************************************************
        DISPLAY-CREDITS-MOVE.
            DISPLAY SS-CLEAR-SCREEN.

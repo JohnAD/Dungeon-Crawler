@@ -45,8 +45,37 @@
                10 WS-HEROES-MENU-TITLE-SHIFT PIC 9(02) VALUE 6.
                10 WS-HEROES-MENU-CONTENT-SHIFT PIC 9(02) VALUE 2.
                10 WS-MHM-TITLE-SHIFT   PIC 9(02) VALUE 6.
+           05 WS-MAX-ANIMATION-CYCLES  PIC 9(01) VALUE 3.
+           05 WS-MAX-IMG-FIGHT-LENGTH  PIC 9(01) VALUE 9.
+           05 WS-INI-IMG-LINE          PIC 9(02) VALUE 15.
        01 WS-AUX.
-           05 WS-AUX-NUMBER            PIC 9(05) VALUE ZERO.
+           05 WS-AUX-NUMBER            PIC S9(05) VALUE ZERO.
+           05 WS-AUX-ALPHA             PIC X(01) VALUE SPACE.
+       01 WS-IMG-FIGHT.
+           05 W-IMG-FIGHT-MONSTER.
+               10 WS-IMG-FIGHT-M PIC X(29) OCCURS 9 TIMES VALUE SPACES.
+      *>          10 FILLER VALUE "                             ".
+      *>          10 FILLER VALUE "        /-/--\               ".
+      *>          10 FILLER VALUE "      (@~@)   )/\            ".
+      *>          10 FILLER VALUE "  ___/--      \  |           ".
+      *>          10 FILLER VALUE " (oo)__ _      )_/           ".
+      *>          10 FILLER VALUE "  ^^___/       \             ".
+      *>          10 FILLER VALUE "        \       |/-\         ".
+      *>          10 FILLER VALUE "         (      )   |        ".
+      *>          10 FILLER VALUE "         |       \_/         ".
+           05 WS-IMG-FIGHT-SWORD.
+               10 WS-IMG-FIGHT-S PIC X(29) OCCURS 9 TIMES VALUE SPACES.
+      *>          10 FILLER VALUE "           _____   _____     ".
+      *>          10 FILLER VALUE "          /     \ /     \    ".
+      *>          10 FILLER VALUE "     ,   |       '       |   ".
+      *>          10 FILLER VALUE "     I __L________       L__ ".
+      *>          10 FILLER VALUE "O====IE__________/     ./___>".
+      *>          10 FILLER VALUE "     I      \.       ./      ".
+      *>          10 FILLER VALUE "     `        \.   ./        ".
+      *>          10 FILLER VALUE "                \ /          ".
+      *>          10 FILLER VALUE "                 '           ".
+           05 WS-IMG-FIGHT-PHOTOGRAM   PIC 9(01) VALUE ZERO.
+           05 WS-IMG-FIGHT-LINE-I      PIC 9(02) VALUE ZERO.
        01 WS-HEROES-FILE.
            05 WS-HEROES-FS         PIC X(02) VALUE ZEROES.
                88 WS-H-FS-OK         VALUE "00".
@@ -65,7 +94,7 @@
                    15 WS-H-R-STRENGTH          PIC 9(02) VALUE ZERO.
                    15 WS-H-R-AGILITY           PIC 9(02) VALUE ZERO.
                    15 WS-H-R-LEVEL             PIC 9(02) VALUE ZERO.
-                   15 WS-H-R-HP                PIC S9(02) VALUE ZERO.
+                   15 WS-H-R-HP                PIC 9(02) VALUE ZERO.
                    15 WS-H-R-PROFESSION        PIC 9(02) VALUE ZERO.
        01 WS-MONSTERS-FILE.
            05 WS-MONSTERS-FS       PIC X(02) VALUE ZEROES.
@@ -81,7 +110,7 @@
                    15 WS-M-R-STRENGTH          PIC 9(02) VALUE ZERO.
                    15 WS-M-R-AGILITY           PIC 9(02) VALUE ZERO.
                    15 WS-M-R-LEVEL             PIC 9(02) VALUE ZERO.
-                   15 WS-M-R-HP                PIC S9(02) VALUE ZERO.
+                   15 WS-M-R-HP                PIC 9(02) VALUE ZERO.
                    15 WS-M-R-PROFESSION        PIC 9(02) VALUE ZERO.
        01 WS-VALID-OPTION  PIC X(37)   VALUES ALL SPACES.
            88 WS-RESET-VALID-OPTION    VALUE ALL SPACES.
@@ -228,27 +257,13 @@
        MAIN-PROCEDURE.
            PERFORM INIT--WS-HEROES-R--CONTENT
            IF WS-M-FS-OK THEN
-               PERFORM INIT--WS-MONSTERS-R--CONTENT
                IF WS-M-FS-OK THEN
+                   PERFORM INI--WS-IMG-FIGHT
                    PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT
                END-IF
            END-IF
 
            GO TO STOP-RUN.
-      ******************************************************************
-       DISPLAY-MONSTERS.
-           DISPLAY WS-M-R-LENGTH" MONSTERS AVAILABLE:"
-           DISPLAY "--------"
-           PERFORM VARYING WS-M-R-INDEX FROM 1 BY 1
-               UNTIL WS-M-R-INDEX > WS-M-R-LENGTH
-               IF WS-M-R-INDEX = WS-M-R-CURRENT THEN
-                   DISPLAY "* " NO ADVANCING
-               ELSE
-                   DISPLAY "  " NO ADVANCING
-               END-IF
-               DISPLAY WS-MONSTERS-R(WS-M-R-INDEX)
-           END-PERFORM
-           DISPLAY "--------".
       ******************************************************************
       * == [DISPLAY-MAIN-MENU] ===================================BEGIN=
        DISPLAY-MAIN-MENU.
@@ -315,11 +330,8 @@
            MOVE WS-H-R-STRENGTH(WS-H-R-INDEX) TO WS-HMC-STRENGTH
            MOVE WS-H-R-AGILITY(WS-H-R-INDEX) TO WS-HMC-AGILITY
            MOVE WS-H-R-LEVEL(WS-H-R-INDEX) TO WS-HMC-LEVEL
-           IF WS-H-R-HP(WS-H-R-INDEX) > 0 THEN
-               MOVE WS-H-R-HP(WS-H-R-INDEX) TO WS-HMC-HP
-           ELSE
-               MOVE 0 TO WS-HMC-HP
-           END-IF
+           MOVE WS-H-R-HP(WS-H-R-INDEX) TO WS-HMC-HP
+
            MOVE WS-H-R-PROFESSION(WS-H-R-INDEX)
              TO WS-HERO-PROFESSION
 
@@ -377,60 +389,93 @@
            SET WS-RESET-VALID-OPTION TO TRUE.
       ******************************************************************
        PLAY.
+           PERFORM INIT--WS-MONSTERS-R--CONTENT
            IF WS-H-R-CURRENT > 0 THEN
                IF WS-M-R-LENGTH > 0 THEN
-                   DISPLAY "["WS-GAME-NAME"] A LA BATALLA!"
                    MOVE 1 TO WS-M-R-CURRENT
                    PERFORM UNTIL
                      NOT (WS-H-R-HP(WS-H-R-CURRENT) > 0
                      AND WS-M-R-CURRENT <= WS-M-R-LENGTH)
+                       DISPLAY SS-CLEAR-SCREEN
                        PERFORM FIGHT-MONSTER
                        ADD 1 TO WS-M-R-CURRENT
                    END-PERFORM
+A
+                   PERFORM PRESS-KEY-TO-CONTINUE
+
                    IF WS-H-R-HP(WS-H-R-CURRENT) > 0 THEN
                        DISPLAY "["WS-GAME-NAME"] Has Ganado!!"
+                         LINE 1 COL 1
                    ELSE
                        DISPLAY "["WS-GAME-NAME"] Has Perdido :("
+                         LINE 1 COL 1
                    END-IF
                ELSE
                    DISPLAY "["WS-GAME-NAME"] "
-                   "No quedan mas monstruos contra los que luchar"
+                     "No quedan mas monstruos contra los que luchar"
+                     LINE 1 COL 1
                END-IF
            ELSE
                DISPLAY "["WS-GAME-NAME"] "
                  "Debes de seleccionar un heroe primero!"
+                 LINE 1 COL 1
            END-IF.
       ******************************************************************
        FIGHT-MONSTER.
-           PERFORM UNTIL WS-H-R-HP(WS-H-R-CURRENT) < 0
-             OR WS-M-R-HP(WS-M-R-CURRENT) < 0
-               PERFORM DISPLAY-MONSTERS
-               DISPLAY "WS-H-R-HP("WS-H-R-CURRENT"): "
-                 WS-H-R-HP(WS-H-R-CURRENT)
-               DISPLAY "WS-M-R-HP("WS-M-R-CURRENT"): "
-                 WS-M-R-HP(WS-M-R-CURRENT)
-               DISPLAY  "["WS-GAME-NAME"] "
-                   "LUCHAS CONTRA EL MONSTRUO CON ID: ** "
-                   WS-M-R-PROFESSION(WS-M-R-CURRENT)" ** "
-                   " CON FUERZA: "WS-M-R-STRENGTH(WS-M-R-CURRENT)
-               DISPLAY "TIENES HP: "WS-H-R-HP(WS-H-R-CURRENT)
-                   " CON FUERZA: "
-                   WS-H-R-STRENGTH(WS-H-R-CURRENT)
+           PERFORM UNTIL WS-H-R-HP(WS-H-R-CURRENT) = 0
+             OR WS-M-R-HP(WS-M-R-CURRENT) = 0
+               DISPLAY "LUCHA POR TU VIDA !!"
+                 LINE 1 COL 1
+               DISPLAY "--------------------"
+                 LINE 2 COL 1
+               DISPLAY "LUCHAS CONTRA EL MONSTRUO CON ID: "
+                 LINE 4 COL 1
+               DISPLAY WS-M-R-PROFESSION(WS-M-R-CURRENT)
+                 LINE 4 COL 35
+               DISPLAY ", CON FUERZA: "
+                 LINE 4 COL 37
+               DISPLAY WS-M-R-STRENGTH(WS-M-R-CURRENT)
+                 LINE 4 COL 51
+               DISPLAY "TIENES HP: "
+                 LINE 5 COL 1
+               DISPLAY WS-H-R-HP(WS-H-R-CURRENT)
+                 LINE 5 COL 12
+               DISPLAY ", CON FUERZA: "
+                 LINE 5 COL 14
+               DISPLAY WS-H-R-STRENGTH(WS-H-R-CURRENT)
+                 LINE 5 COL 28
 
                IF WS-H-R-STRENGTH(WS-H-R-CURRENT)
                    > WS-M-R-STRENGTH(WS-M-R-CURRENT) THEN
-                   COMPUTE WS-M-R-HP(WS-M-R-CURRENT) =
+                   COMPUTE WS-AUX-NUMBER =
                        WS-M-R-HP(WS-M-R-CURRENT)
                        - WS-H-R-STRENGTH(WS-H-R-CURRENT)
+                   IF WS-AUX-NUMBER < 0 THEN
+                       MOVE 0 TO WS-M-R-HP(WS-M-R-CURRENT)
+                   ELSE
+                       MOVE WS-AUX-NUMBER TO WS-M-R-HP(WS-M-R-CURRENT)
+                   END-IF
+
                    DISPLAY "HAS HERIDO AL MONSTRUO, TIENE HP: "
-                       WS-M-R-HP(WS-M-R-CURRENT)
+                     LINE 6 COL 1
+                   DISPLAY WS-M-R-HP(WS-M-R-CURRENT)
+                     LINE 6 COL 35
                ELSE
-                   COMPUTE WS-H-R-HP(WS-H-R-CURRENT) =
+                   COMPUTE WS-AUX-NUMBER =
                        WS-H-R-HP(WS-H-R-CURRENT)
                        - WS-M-R-STRENGTH(WS-M-R-CURRENT)
+                   IF WS-AUX-NUMBER < 0 THEN
+                       MOVE 0 TO WS-H-R-HP(WS-H-R-CURRENT)
+                   ELSE
+                       MOVE WS-AUX-NUMBER TO WS-H-R-HP(WS-H-R-CURRENT)
+                   END-IF
+
                    DISPLAY "TE HA HERIDO EL MONSTRUO, TIENES HP: "
-                       WS-H-R-HP(WS-H-R-CURRENT)
+                     LINE 6 COL 1
+                   DISPLAY WS-H-R-HP(WS-H-R-CURRENT)
+                       LINE 6 COL 38
                END-IF
+               PERFORM FIGHT-MONSTER-ANIMATION
            END-PERFORM.
       ******************************************************************
        EXIT-GAME.
@@ -498,11 +543,7 @@
            MOVE WS-H-R-STRENGTH((WS-H-R-CURRENT)) TO WS-MHM-C-STRENGTH.
            MOVE WS-H-R-AGILITY(WS-H-R-CURRENT) TO WS-MHM-C-AGILITY.
            MOVE WS-H-R-LEVEL(WS-H-R-CURRENT) TO WS-MHM-C-LEVEL.
-           IF WS-H-R-HP(WS-H-R-CURRENT) < 0 THEN
-               MOVE 0 TO WS-MHM-C-HP
-           ELSE
-               MOVE WS-H-R-HP(WS-H-R-CURRENT) TO WS-MHM-C-HP
-           END-IF.
+           MOVE WS-H-R-HP(WS-H-R-CURRENT) TO WS-MHM-C-HP.
 
            PERFORM SET-MENU-ERROR.
            DISPLAY WS-MHM-TITLE LINE 1 COL 1.
@@ -580,6 +621,57 @@
       ******************************************************************
        RESETEAR.
            MOVE 0 TO WS-PM-DELTA-TIME.
+      ******************************************************************
+       INI--WS-IMG-FIGHT.
+      * TODO : Read from file
+           MOVE "                             " TO WS-IMG-FIGHT-M(01).
+           MOVE "        /-/--\               " TO WS-IMG-FIGHT-M(02).
+           MOVE "      (@~@)   )/\            " TO WS-IMG-FIGHT-M(03).
+           MOVE "  ___/--      \  |           " TO WS-IMG-FIGHT-M(04).
+           MOVE " (oo)__ _      )_/           " TO WS-IMG-FIGHT-M(05).
+           MOVE "  ^^___/       \             " TO WS-IMG-FIGHT-M(06).
+           MOVE "        \       |/-\         " TO WS-IMG-FIGHT-M(07).
+           MOVE "         (      )   |        " TO WS-IMG-FIGHT-M(08).
+           MOVE "         |       \_/         " TO WS-IMG-FIGHT-M(09).
+
+           MOVE "           _____   _____     " TO WS-IMG-FIGHT-S(01).
+           MOVE "          /     \ /     \    " TO WS-IMG-FIGHT-S(02).
+           MOVE "     ,   |       '       |   " TO WS-IMG-FIGHT-S(03).
+           MOVE "     I __L________       L__ " TO WS-IMG-FIGHT-S(04).
+           MOVE "O====IE__________/     ./___>" TO WS-IMG-FIGHT-S(05).
+           MOVE "     I      \.       ./      " TO WS-IMG-FIGHT-S(06).
+           MOVE "     `        \.   ./        " TO WS-IMG-FIGHT-S(07).
+           MOVE "                \ /          " TO WS-IMG-FIGHT-S(08).
+           MOVE "                 '           " TO WS-IMG-FIGHT-S(09).
+      ******************************************************************
+       FIGHT-MONSTER-ANIMATION.
+           PERFORM WS-MAX-ANIMATION-CYCLES TIMES
+               MOVE WS-INI-IMG-LINE TO WS-IMG-FIGHT-LINE-I
+               MOVE 1 TO  WS-IMG-FIGHT-PHOTOGRAM
+               PERFORM WS-MAX-IMG-FIGHT-LENGTH TIMES
+                   DISPLAY WS-IMG-FIGHT-M(WS-IMG-FIGHT-PHOTOGRAM)
+                     AT LINE WS-IMG-FIGHT-LINE-I COL 10
+                   ADD 1 TO WS-IMG-FIGHT-PHOTOGRAM
+                   ADD 1 TO WS-IMG-FIGHT-LINE-I
+               END-PERFORM
+               PERFORM PAUSA
+
+               MOVE WS-INI-IMG-LINE TO WS-IMG-FIGHT-LINE-I
+               MOVE 1 TO WS-IMG-FIGHT-PHOTOGRAM
+               PERFORM WS-MAX-IMG-FIGHT-LENGTH TIMES
+                   DISPLAY  WS-IMG-FIGHT-S(WS-IMG-FIGHT-PHOTOGRAM)
+                     AT LINE WS-IMG-FIGHT-LINE-I COL 10
+                   ADD 1 TO WS-IMG-FIGHT-PHOTOGRAM
+                   ADD 1 TO WS-IMG-FIGHT-LINE-I
+               END-PERFORM
+               PERFORM PAUSA
+           END-PERFORM.
+      ******************************************************************
+       PRESS-KEY-TO-CONTINUE.
+           DISPLAY "Pulsa una tecla para continuar ... "
+             LINE 25 COL 1.
+           ACCEPT WS-AUX-ALPHA
+             LINE 25 COL 36.
       ******************************************************************
        STOP-RUN.
            STOP RUN.

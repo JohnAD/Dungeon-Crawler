@@ -470,14 +470,10 @@
                    END-PERFORM
 
                    IF WS-H-R-HP(WS-H-R-CURRENT) > 0 THEN
-                       DISPLAY "Has Ganado!!"
-                         LINE 22 COL 1
+                       PERFORM WIN
                    ELSE
-                       DISPLAY "Has Perdido :("
-                         LINE 22 COL 1
+                       PERFORM LOSE
                    END-IF
-
-                   PERFORM PRESS-KEY-TO-CONTINUE
                ELSE
                    DISPLAY
                      "No quedan mas monstruos contra los que luchar"
@@ -675,7 +671,7 @@
        SET-MENU-ERROR.
            MOVE WS-VALID-OPTION TO WS-MHM-ERROR.
       *****************************************************************
-       PAUSA.
+       PAUSE.
            ACCEPT WS-PM-NOW-1-DATE FROM DATE.
            ACCEPT WS-PM-NOW-1-TIME FROM TIME.
            MOVE 0 TO WS-PM-WRK-ONE-DAY.
@@ -725,7 +721,7 @@
                    ADD 1 TO WS-IMG-FIGHT-PHOTOGRAM
                    ADD 1 TO WS-IMG-FIGHT-LINE-I
                END-PERFORM
-               PERFORM PAUSA
+               PERFORM PAUSE
 
                MOVE WS-INI-IMG-LINE TO WS-IMG-FIGHT-LINE-I
                MOVE 1 TO WS-IMG-FIGHT-PHOTOGRAM
@@ -735,22 +731,22 @@
                    ADD 1 TO WS-IMG-FIGHT-PHOTOGRAM
                    ADD 1 TO WS-IMG-FIGHT-LINE-I
                END-PERFORM
-               PERFORM PAUSA
+               PERFORM PAUSE
            END-PERFORM.
       ******************************************************************
        PRESS-KEY-TO-CONTINUE.
-           DISPLAY "Pulsa una tecla para continuar ... "
+           DISPLAY "Pulsa INTRO para continuar ... "
              LINE 25 COL 1.
            ACCEPT WS-AUX-ALPHA
              LINE 25 COL 36.
       ******************************************************************
        DISPLAY-INTRO.
            DISPLAY SS-TITLE-1.
-           PERFORM PAUSA.
+           PERFORM PAUSE.
            DISPLAY SS-TITLE-2.
-           PERFORM PAUSA.
+           PERFORM PAUSE.
            DISPLAY SS-TITLE-3.
-           PERFORM PAUSA.
+           PERFORM PAUSE.
            DISPLAY SS-TITLE-4.
            ACCEPT SS-INTRO.
            DISPLAY SS-CLEAR-SCREEN.
@@ -772,8 +768,122 @@
                    LINE WS-C-SCREEN-LINE COL 25
                    ADD 1 TO WS-C-SCREEN-LINE
                END-PERFORM
-               PERFORM PAUSA
+               PERFORM PAUSE
            END-PERFORM.
+      ******************************************************************
+       WIN.
+           DISPLAY SS-CLEAR-SCREEN.
+      *****YOU
+           DISPLAY
+           "8b        d8  ad8888ba    88        88"
+           AT LINE 2 COL 10.
+           DISPLAY
+           " Y8      8P d8b      d8b  88        88"
+           AT LINE 3 COL 10.
+           DISPLAY
+           "  Y8    8P d8          8b 88        88"
+           AT LINE 4 COL 10.
+           DISPLAY
+           "   8aaaa8  88          88 88        88"
+           AT LINE 5 COL 10.
+           DISPLAY
+           "     88    88          88 88        88"
+           AT LINE 6 COL 10.
+           DISPLAY
+           "     88    Y8          8P 88        88"
+           AT LINE 7 COL 10.
+           DISPLAY
+           "     88     Y8a      a8P  Y8a      a8P"
+           AT LINE 8 COL 10.
+           DISPLAY
+           "     88       Y888888Y      Y888888Y"
+           AT LINE 9 COL 10.
+      *****WIN!
+           DISPLAY
+           "I8         8         8I 88 888b      88       88"
+           AT LINE 12 COL 13.
+           DISPLAY
+           " 8b       d8b       d8  88 8888b     88       88"
+           AT LINE 13 COL 13.
+           DISPLAY
+           "  8       8 8       8   88 88  8b    88       88"
+           AT LINE 14 COL 13.
+           DISPLAY
+           "  Y8     8P Y8     8P   88 88   8b   88       88"
+           AT LINE 15 COL 13.
+           DISPLAY
+           "   8b   d8   8b   d8    88 88    8b  88       88"
+           AT LINE 16 COL 13.
+           DISPLAY
+           "    8a a8     8a a8     88 88     8b 88"
+           AT LINE 17 COL 13.
+           DISPLAY
+           "     8a8       8a8      88 88      8888       aa"
+           AT LINE 18 COL 13.
+           DISPLAY
+           "      8         8       88 88       888       88"
+           AT LINE 19 COL 13.
+           DISPLAY "HAS GANADO!"
+           AT LINE 22 COL 35.
+           PERFORM PRESS-KEY-TO-CONTINUE.
+           DISPLAY SS-CLEAR-SCREEN.
+      ******************************************************************
+       LOSE.
+           DISPLAY SS-CLEAR-SCREEN.
+      *****GAME
+           DISPLAY
+           "  ad8888ba          db        88b           d88 88888888888"
+           AT LINE 2 COL 10.
+           DISPLAY
+           " d8      8b        d88b       888b         d888 88"
+           AT LINE 3 COL 10.
+           DISPLAY
+           "d8                d8  8b      88 8b       d8 88 88"
+           AT LINE 4 COL 10.
+           DISPLAY
+           "88               d8    8b     88  8b     d8  88 88aaaaa"
+           AT LINE 5 COL 10.
+           DISPLAY
+           "88      88888   d8YaaaaY8b    88   8b   d8   88 88"
+           AT LINE 6 COL 10.
+           DISPLAY
+           "Y8         88  d8        8b   88    8b d8    88 88"
+           AT LINE 7 COL 10.
+           DISPLAY
+           " Y8a      a88 d8          8b  88     888     88 88"
+           AT LINE 8 COL 10.
+           DISPLAY
+           "  Y88888888P  d8          8b  88      8      88 88888888888"
+           AT LINE 9 COL 10.
+      *****OVER
+           DISPLAY
+           "  ad8888ba  8b           d8 88888888888 88888888ba"
+           AT LINE 12 COL 13.
+           DISPLAY
+           " d8      8b  8b         d8  88          88       8b"
+           AT LINE 13 COL 13.
+           DISPLAY
+           "d8        8b  8b       d8   88          88       8P"
+           AT LINE 14 COL 13.
+           DISPLAY
+           "88        88   8b     d8    88aaaaa     88aaaaaa8P"
+           AT LINE 15 COL 13.
+           DISPLAY
+           "88        88    8b   d8     88          88    88"
+           AT LINE 16 COL 13.
+           DISPLAY
+           "Y8        8P     8b d8      88          88     8b"
+           AT LINE 17 COL 13.
+           DISPLAY
+           " Y8a     a8P      888       88          88      8b"
+           AT LINE 18 COL 13.
+           DISPLAY
+           "  Y8888888Y        8        88888888888 88       8b"
+           AT LINE 19 COL 13.
+           DISPLAY "HAS PERDIDO!"
+           AT LINE 22 COL 35.
+           PERFORM PRESS-KEY-TO-CONTINUE.
+           DISPLAY SS-CLEAR-SCREEN.
       ******************************************************************
        INI-CREDITS-ARRAY.
            MOVE "        ORIGINAL CONCEPT         " TO WS-C-ARR(40).

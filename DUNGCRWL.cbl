@@ -48,6 +48,8 @@
            05 WS-MAX-ANIMATION-CYCLES  PIC 9(01) VALUE 3.
            05 WS-MAX-IMG-FIGHT-LENGTH  PIC 9(01) VALUE 9.
            05 WS-INI-IMG-LINE          PIC 9(02) VALUE 12.
+           05 WS-MAX-ARR               PIC 9(02) VALUE 88.
+           05 WS-SCREEN-LINE-POS       PIC 9(02) VALUE 1.
        01 WS-AUX.
            05 WS-AUX-NUMBER            PIC S9(05) VALUE ZERO.
            05 WS-AUX-ALPHA             PIC X(01) VALUE SPACE.
@@ -249,6 +251,13 @@
                10 WS-PM-NOW-2-TIME     PIC 9(08) VALUE ZERO.
            05 WS-PM-WRK-ONE-DAY        PIC 9(08) VALUE ZERO.
            05 WS-PM-DELTA-TIME         PIC 9(08) VALUE ZERO.
+       01 WS-CREDITS.
+           05 WS-C-ARR                PIC X(42) OCCURS 88 TIMES
+                                        VALUE SPACES.
+           05 WS-C-POS                PIC 9(02) VALUE 1.
+           05 WS-C-I                  PIC 9(02) VALUE 1.
+           05 WS-C-SCREEN-LINE        PIC 9(02) VALUE 1.
+           05 WS-C-FINAL-POS          PIC 9(02) VALUE 0.
        SCREEN SECTION.
        01 SS-CLEAR-SCREEN.
            05 BLANK SCREEN.
@@ -259,6 +268,7 @@
            IF WS-M-FS-OK THEN
                IF WS-M-FS-OK THEN
                    PERFORM INI--WS-IMG-FIGHT
+                   PERFORM INI-CREDITS-ARRAY
                    PERFORM DISPLAY-MAIN-MENU UNTIL WS-MM-OP-EXIT
                END-IF
            END-IF
@@ -482,7 +492,7 @@
            END-PERFORM.
       ******************************************************************
        EXIT-GAME.
-           DISPLAY "SALIR".
+           PERFORM DISPLAY-CREDITS-MOVE.
       * == [DISPLAY-MAIN-MENU] =====================================END=
 
       ******************************************************************
@@ -675,6 +685,72 @@
              LINE 25 COL 1.
            ACCEPT WS-AUX-ALPHA
              LINE 25 COL 36.
+      ******************************************************************
+       DISPLAY-CREDITS-MOVE.
+           DISPLAY SS-CLEAR-SCREEN.
+           PERFORM VARYING WS-C-POS FROM 1 BY 1
+             UNTIL WS-C-POS > WS-MAX-ARR
+               MOVE WS-SCREEN-LINE-POS TO WS-C-SCREEN-LINE
+               PERFORM VARYING WS-C-I FROM WS-C-POS BY 1
+                 UNTIL WS-C-I > WS-MAX-ARR
+                   DISPLAY WS-C-ARR(WS-C-I) LINE WS-C-SCREEN-LINE COL 25
+                   ADD 1 TO WS-C-SCREEN-LINE
+               END-PERFORM
+               COMPUTE WS-C-FINAL-POS = WS-C-POS - 1
+               PERFORM VARYING WS-C-I FROM 1 BY 1
+                 UNTIL WS-C-I > WS-C-FINAL-POS
+                   DISPLAY "                                           "
+                   LINE WS-C-SCREEN-LINE COL 25
+                   ADD 1 TO WS-C-SCREEN-LINE
+               END-PERFORM
+               PERFORM PAUSA
+           END-PERFORM.
+      ******************************************************************
+       INI-CREDITS-ARRAY.
+           MOVE "        ORIGINAL CONCEPT         " TO WS-C-ARR(40).
+           MOVE "        ----------------         " TO WS-C-ARR(41).
+           MOVE "        Albert Llaurado          " TO WS-C-ARR(42).
+           MOVE "                                 " TO WS-C-ARR(43).
+           MOVE "           DESIGNERS             " TO WS-C-ARR(44).
+           MOVE "           ---------             " TO WS-C-ARR(45).
+           MOVE "       Juan Ramon Espuny         " TO WS-C-ARR(46).
+           MOVE "       Juan Jose Sanchez         " TO WS-C-ARR(47).
+           MOVE "                                 " TO WS-C-ARR(48).
+           MOVE "    LEVEL / SCENARIO DESIGN      " TO WS-C-ARR(49).
+           MOVE "    -----------------------      " TO WS-C-ARR(50).
+           MOVE "       Juan Jose Sanchez         " TO WS-C-ARR(51).
+           MOVE "       Juan Ramon Espuny         " TO WS-C-ARR(52).
+           MOVE "                                 " TO WS-C-ARR(53).
+           MOVE "          PROGRAMMING            " TO WS-C-ARR(54).
+           MOVE "          -----------            " TO WS-C-ARR(55).
+           MOVE "       Juan Jose Sanchez         " TO WS-C-ARR(56).
+           MOVE "       Juan Ramon Espuny         " TO WS-C-ARR(57).
+           MOVE "                                 " TO WS-C-ARR(58).
+           MOVE "    LEVEL / SCENARIO DESIGN      " TO WS-C-ARR(59).
+           MOVE "    -----------------------      " TO WS-C-ARR(60).
+           MOVE "       Lead Programming:         " TO WS-C-ARR(61).
+           MOVE "       Juan Ramon Espuny         " TO WS-C-ARR(62).
+           MOVE "     Additional Programming:     " TO WS-C-ARR(63).
+           MOVE "       Juan Jose Sanchez         " TO WS-C-ARR(64).
+           MOVE "                                 " TO WS-C-ARR(65).
+           MOVE "GAME ENGINE / DEVELOPMENT SYSTEM " TO WS-C-ARR(66).
+           MOVE "-------------------------------- " TO WS-C-ARR(67).
+           MOVE "         OpenCobol IDE           " TO WS-C-ARR(68).
+           MOVE "                                 " TO WS-C-ARR(69).
+           MOVE "      GRAPHICS PROGRAMMING       " TO WS-C-ARR(70).
+           MOVE "    -----------------------      " TO WS-C-ARR(71).
+           MOVE "       Juan Jose Sanchez         " TO WS-C-ARR(72).
+           MOVE "       Juan Ramon Espuny         " TO WS-C-ARR(73).
+           MOVE "                                 " TO WS-C-ARR(74).
+           MOVE "       SOUND PROGRAMMING         " TO WS-C-ARR(75).
+           MOVE "    -----------------------      " TO WS-C-ARR(76).
+           MOVE "       Juan Jose Sanchez         " TO WS-C-ARR(77).
+           MOVE "                                 " TO WS-C-ARR(78).
+           MOVE "                                 " TO WS-C-ARR(79).
+           MOVE "      Thanks for playing!        " TO WS-C-ARR(80).
+           MOVE "                                 " TO WS-C-ARR(81).
+           MOVE "                                 " TO WS-C-ARR(82).
+           MOVE "Special Thanks to Albert Llaurado" TO WS-C-ARR(83).
       ******************************************************************
        STOP-RUN.
            STOP RUN.

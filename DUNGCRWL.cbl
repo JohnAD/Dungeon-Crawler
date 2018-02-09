@@ -47,7 +47,7 @@
                10 WS-MHM-TITLE-SHIFT   PIC 9(02) VALUE 6.
            05 WS-MAX-ANIMATION-CYCLES  PIC 9(01) VALUE 3.
            05 WS-MAX-IMG-FIGHT-LENGTH  PIC 9(01) VALUE 9.
-           05 WS-INI-IMG-LINE          PIC 9(02) VALUE 15.
+           05 WS-INI-IMG-LINE          PIC 9(02) VALUE 12.
        01 WS-AUX.
            05 WS-AUX-NUMBER            PIC S9(05) VALUE ZERO.
            05 WS-AUX-ALPHA             PIC X(01) VALUE SPACE.
@@ -400,25 +400,28 @@
                        PERFORM FIGHT-MONSTER
                        ADD 1 TO WS-M-R-CURRENT
                    END-PERFORM
-A
-                   PERFORM PRESS-KEY-TO-CONTINUE
 
                    IF WS-H-R-HP(WS-H-R-CURRENT) > 0 THEN
-                       DISPLAY "["WS-GAME-NAME"] Has Ganado!!"
-                         LINE 1 COL 1
+                       DISPLAY "Has Ganado!!"
+                         LINE 22 COL 1
                    ELSE
-                       DISPLAY "["WS-GAME-NAME"] Has Perdido :("
-                         LINE 1 COL 1
+                       DISPLAY "Has Perdido :("
+                         LINE 22 COL 1
                    END-IF
+
+                   PERFORM PRESS-KEY-TO-CONTINUE
                ELSE
-                   DISPLAY "["WS-GAME-NAME"] "
+                   DISPLAY
                      "No quedan mas monstruos contra los que luchar"
-                     LINE 1 COL 1
+                     LINE 22 COL 1
+
+                     PERFORM PRESS-KEY-TO-CONTINUE
                END-IF
            ELSE
-               DISPLAY "["WS-GAME-NAME"] "
-                 "Debes de seleccionar un heroe primero!"
-                 LINE 1 COL 1
+               DISPLAY "Debes de seleccionar un heroe primero!"
+                 LINE 22 COL 1
+
+                 PERFORM PRESS-KEY-TO-CONTINUE
            END-IF.
       ******************************************************************
        FIGHT-MONSTER.

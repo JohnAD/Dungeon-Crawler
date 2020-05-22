@@ -117,12 +117,12 @@
        01 WS-VALID-OPTION  PIC X(37)   VALUES ALL SPACES.
            88 WS-RESET-VALID-OPTION    VALUE ALL SPACES.
            88 WS-INVALID-OPTION
-             VALUE "[Escoge una opcion correcta]".
+             VALUE "[Choose a correct option]".
            88 WS-MISSING-STEPS-OPTION
-             VALUE "[Primero debes seleccionar un heroe!]".
+             VALUE "[You must first select a hero!]".
        01 WS-SHOW-SELECTED-HERO-OPTION PIC X(08) VALUE ALL SPACES.
            88 WS-RESET-SELECTED-HERO-OPTION   VALUE ALL SPACES.
-           88 WS-SELECTED-HERO-OPTION   VALUE "con ID: ".
+           88 WS-SELECTED-HERO-OPTION   VALUE "w / ID: ".
        01 WS-MAIN-MENU.
            05 WS-MM-OPTION             PIC X(01) VALUE SPACE.
                88 WS-MM-OP-EXIT          VALUE "0".
@@ -131,44 +131,44 @@
                88 WS-MM-OP-PLAY          VALUE "3".
            05 WS-MM.
                10 FILLER               PIC X(15)
-                                         VALUE "MENU PRINCIPAL".
+                                         VALUE "MAIN MENU".
                10 WS-MM-ERROR      PIC X(37) VALUE ALL SPACES.
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(14) VALUE ALL "-".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(18) VALUE "Escoge una opcion:".
+               10 FILLER           PIC X(18) VALUE "Choose an option:".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(20)
-                 VALUE "1- Seleccionar heroe".
+                 VALUE "1- Select hero".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(19)
-                 VALUE "2- Modificar heroe ".
+                 VALUE "2- Edit hero ".
                10 WS-MM-PREFIX     PIC X(08) VALUE SPACES.
                10 WS-MM-HERO-ID    PIC X(02) VALUE SPACES.
                10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(16) VALUE "3- A la batalla!".
+               10 FILLER           PIC X(16) VALUE "3- To battle!".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(09) VALUE "0- Salir.".
+               10 FILLER           PIC X(09) VALUE "0- Exit.".
        01 WS-HEROES-MENU.
            05 WS-H-OPTION            PIC X(01) VALUE SPACE.
                88 WS-H-OP-CONTINUE     VALUE SPACE.
                88 WS-H-OP-EXIT         VALUE "0".
            05 WS-HEROES-MENU-TITLE.
                10 WS-HM-HEADING    PIC X(18)
-                 VALUE "LISTADO DE HEROES ".
+                 VALUE "LIST OF HEROES ".
                10 WS-HM-ERROR      PIC X(28) VALUE ALL SPACES.
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(17) VALUE ALL "-".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(18) VALUE "Escoge una opcion:".
+               10 FILLER           PIC X(18) VALUE "Choose an option: ".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(52)
-           VALUE "     ID  Fuerza  Agilidad  Nivel  P. Vida  Profesion".
+           VALUE "     ID  Force   Agility   Level  Life Pt  Profess'n".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(52)
            VALUE "     --  ------  --------  -----  -------  ---------".
@@ -190,7 +190,7 @@
                10 WS-HMC-PROFESSION    PIC X(08).
            05 WS-HEROES-MENU-FOOTER.
                10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(09) VALUE "0- Salir".
+               10 FILLER           PIC X(09) VALUE "0- Exit".
        01 WS-MOD-HEROES-MENU.
            05 WS-MHM-OPTION            PIC X(01) VALUE SPACE.
                88 WS-MHM-OP-CONTINUE     VALUE SPACE.
@@ -201,47 +201,47 @@
                88 WS-MHM-OP-HP           VALUE "4".
            05 WS-MHM-TITLE.
                10 FILLER           PIC X(16)
-                                     VALUE "MODIFICAR HEROE ".
+                                     VALUE "MODIFY HERO ".
                10 WS-MHM-ERROR     PIC X(28) VALUE ALL SPACES.
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(15) VALUE ALL "-".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(18) VALUE "Escoge una opcion:".
+               10 FILLER           PIC X(18) VALUE "Choose an option:".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(01) VALUE X"0A".
            05 WS-MHM-SELECTION-TITLE.
                10 FILLER           PIC X(16)
-                                     VALUE "MODIFICAR HEROE ".
+                                     VALUE "MODIFY HERO ".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(15) VALUE ALL "-".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(30)
-                 VALUE "Selecciona el nuevo valor de: ".
+                 VALUE "Select the new value of: ".
                10 WS-MHM-SEL-TIT-MODIFYING  PIC X(11) VALUE ALL SPACES.
                10 FILLER           PIC X(01) VALUE X"0A".
                10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(15) VALUE "Antiguo valor: ".
+               10 FILLER           PIC X(15) VALUE "Old value: ".
                10 WS-MHM-SEL-TIT-NEWVALUE PIC X(10) VALUE ALL SPACES.
                10 FILLER           PIC X(01) VALUE X"0A".
-               10 FILLER           PIC X(13) VALUE "Nuevo valor: ".
+               10 FILLER           PIC X(13) VALUE "New value: ".
            05 WS-MHM-CONTENT.
-               10 FILLER               PIC X(11) VALUE "1- Fuerza: ".
+               10 FILLER               PIC X(11) VALUE "1- Force: ".
                10 WS-MHM-C-STRENGTH    PIC 9(02) VALUE ZEROES.
                10 FILLER               PIC X(01) VALUE X"0A".
-               10 FILLER               PIC X(13) VALUE "2- Agilidad: ".
+               10 FILLER               PIC X(13) VALUE "2- Agility: ".
                10 WS-MHM-C-AGILITY     PIC 9(02) VALUE ZEROES.
                10 FILLER               PIC X(01) VALUE X"0A".
-               10 FILLER               PIC X(10) VALUE "3- Nivel: ".
+               10 FILLER               PIC X(10) VALUE "3- Level: ".
                10 WS-MHM-C-LEVEL       PIC 9(02) VALUE ZEROES.
                10 FILLER               PIC X(01) VALUE X"0A".
                10 FILLER               PIC X(16)
-                                         VALUE "4- Puntos Vida: ".
+                                         VALUE "4- Life Points: ".
                10 WS-MHM-C-HP          PIC 9(02) VALUE ZEROES.
            05 WS-MHM-FOOTER.
                10 FILLER               PIC X(01) VALUE X"0A".
-               10 FILLER               PIC X(09) VALUE "0- Salir".
+               10 FILLER               PIC X(09) VALUE "0- Exit".
        01 WS-PAUSE-MECHANISM.
            05 WS-PM-NOW-1.
                10 WS-PM-NOW-1-DATE     PIC 9(08) VALUE ZERO.
@@ -302,7 +302,7 @@
                  FOREGROUND-COLOR IS 6.
            05 SS-TITLE-3.
                10 LINE 18 COL 40 VALUE
-                 "Hecho por Juan Ramon & Juanjo Sanchez"
+                 "Written by Juan Ramon & Juanjo Sanchez"
                  FOREGROUND-COLOR IS 2.
            05 SS-TITLE-4.
                10 LINE 20 COL 15 VALUE
@@ -311,7 +311,7 @@
                  " ()          //----------------------------------("
                  FOREGROUND-COLOR IS 3.
                10 LINE 22 COL 15 VALUE
-                 "(*)OXOXOX(*>      PULSE ENTER PARA CONTINUAR      \".
+                 "(*)OXOXOX(*>      PRESS ENTER TO CONTINUE         \".
                10 LINE 23 COL 15 VALUE
                   "()          \\------------------------------------)"
                   FOREGROUND-COLOR IS 3.
@@ -405,11 +405,11 @@
 
            EVALUATE TRUE
            WHEN WS-H-P-GUERRERO
-               MOVE "GUERRERO" TO WS-HMC-PROFESSION
+               MOVE "WARRIOR " TO WS-HMC-PROFESSION
            WHEN WS-H-P-ARQUERO
-               MOVE "ARQUERO " TO WS-HMC-PROFESSION
+               MOVE " ARCHER " TO WS-HMC-PROFESSION
            WHEN WS-H-P-MAGO
-               MOVE "  MAGO  " TO WS-HMC-PROFESSION
+               MOVE "  MAGE  " TO WS-HMC-PROFESSION
            END-EVALUATE
 
            ADD 1 TO WS-AUX-NUMBER.
@@ -476,13 +476,13 @@
                    END-IF
                ELSE
                    DISPLAY
-                     "No quedan mas monstruos contra los que luchar"
+                     "There are no more monsters to fight"
                      LINE 22 COL 1
 
                      PERFORM PRESS-KEY-TO-CONTINUE
                END-IF
            ELSE
-               DISPLAY "Debes de seleccionar un heroe primero!"
+               DISPLAY "You must select a hero first!"
                  LINE 22 COL 1
 
                  PERFORM PRESS-KEY-TO-CONTINUE
@@ -491,23 +491,23 @@
        FIGHT-MONSTER.
            PERFORM UNTIL WS-H-R-HP(WS-H-R-CURRENT) = 0
              OR WS-M-R-HP(WS-M-R-CURRENT) = 0
-               DISPLAY "LUCHA POR TU VIDA !!"
+               DISPLAY "FIGHT FOR YOUR LIFE !!"
                  LINE 1 COL 1
-               DISPLAY "--------------------"
+               DISPLAY "----------------------"
                  LINE 2 COL 1
-               DISPLAY "LUCHAS CONTRA EL MONSTRUO CON ID: "
+               DISPLAY "FIGHT AGAINST THE MONSTER W/ ID: "
                  LINE 4 COL 1
                DISPLAY WS-M-R-PROFESSION(WS-M-R-CURRENT)
                  LINE 4 COL 35
-               DISPLAY ", CON FUERZA: "
+               DISPLAY ", HARDNESS:   "
                  LINE 4 COL 37
                DISPLAY WS-M-R-STRENGTH(WS-M-R-CURRENT)
                  LINE 4 COL 51
-               DISPLAY "TIENES HP: "
+               DISPLAY "YOUR HP:   "
                  LINE 5 COL 1
                DISPLAY WS-H-R-HP(WS-H-R-CURRENT)
                  LINE 5 COL 12
-               DISPLAY ", CON FUERZA: "
+               DISPLAY ", HARDNESS:   "
                  LINE 5 COL 14
                DISPLAY WS-H-R-STRENGTH(WS-H-R-CURRENT)
                  LINE 5 COL 28
@@ -522,8 +522,8 @@
                    ELSE
                        MOVE WS-AUX-NUMBER TO WS-M-R-HP(WS-M-R-CURRENT)
                    END-IF
-
-                   DISPLAY "HAS HERIDO AL MONSTRUO, TIENE HP: "
+                            
+                   DISPLAY "YOU HAVE HURT THE MONSTER, HAS HP:"
                      LINE 6 COL 1
                    DISPLAY WS-M-R-HP(WS-M-R-CURRENT)
                      LINE 6 COL 35
@@ -537,10 +537,10 @@
                        MOVE WS-AUX-NUMBER TO WS-H-R-HP(WS-H-R-CURRENT)
                    END-IF
 
-                   DISPLAY "TE HA HERIDO EL MONSTRUO, TIENES HP: "
+                   DISPLAY "THE MONSTER HAS HURT YOU, YOUR HP: "
                      LINE 6 COL 1
                    DISPLAY WS-H-R-HP(WS-H-R-CURRENT)
-                       LINE 6 COL 38
+                       LINE 6 COL 37
                END-IF
                PERFORM FIGHT-MONSTER-ANIMATION
            END-PERFORM.
@@ -574,7 +574,7 @@
            END-READ.
       ******************************************************************
        ERROR-OPENING-HEROES.
-           DISPLAY "["WS-GAME-NAME"] Fichero HEROES no disponible.".
+           DISPLAY "["WS-GAME-NAME"] HEROES file not available.".
       * == [INIT--WS-HEROES-R--CONTENT] ============================END=
 
       ******************************************************************
@@ -602,7 +602,7 @@
            END-READ.
       ******************************************************************
        ERROR-OPENING-MONSTERS.
-           DISPLAY "["WS-GAME-NAME"] Fichero MONSTERS no disponible.".
+           DISPLAY "["WS-GAME-NAME"] MONSTERS file not available.".
       * == [INIT--WS-MONSTERS-R--CONTENT] ==========================END=
 
       ******************************************************************
@@ -631,7 +631,7 @@
                MOVE WS-H-R-STRENGTH(WS-H-R-CURRENT)
                  TO WS-MHM-SEL-TIT-NEWVALUE
 
-               MOVE "Fuerza" TO WS-MHM-SEL-TIT-MODIFYING
+               MOVE "Force" TO WS-MHM-SEL-TIT-MODIFYING
                DISPLAY WS-MHM-SELECTION-TITLE LINE 1 COL 1
 
                ACCEPT WS-H-R-STRENGTH(WS-H-R-CURRENT)
@@ -640,7 +640,7 @@
                MOVE WS-H-R-AGILITY(WS-H-R-CURRENT)
                  TO WS-MHM-SEL-TIT-NEWVALUE
 
-               MOVE "Agilidad" TO WS-MHM-SEL-TIT-MODIFYING
+               MOVE "Agility" TO WS-MHM-SEL-TIT-MODIFYING
                DISPLAY WS-MHM-SELECTION-TITLE LINE 1 COL 1
 
                ACCEPT WS-H-R-AGILITY(WS-H-R-CURRENT)
@@ -649,7 +649,7 @@
                MOVE WS-H-R-LEVEL(WS-H-R-CURRENT)
                  TO WS-MHM-SEL-TIT-NEWVALUE
 
-               MOVE "Nivel" TO WS-MHM-SEL-TIT-MODIFYING
+               MOVE "Level" TO WS-MHM-SEL-TIT-MODIFYING
                DISPLAY WS-MHM-SELECTION-TITLE LINE 1 COL 1
 
                ACCEPT WS-H-R-LEVEL(WS-H-R-CURRENT)
@@ -658,7 +658,7 @@
                MOVE WS-H-R-HP(WS-H-R-CURRENT)
                  TO WS-MHM-SEL-TIT-NEWVALUE
 
-               MOVE "Puntos Vida" TO WS-MHM-SEL-TIT-MODIFYING
+               MOVE "Life Points" TO WS-MHM-SEL-TIT-MODIFYING
                DISPLAY WS-MHM-SELECTION-TITLE LINE 1 COL 1
 
                ACCEPT WS-H-R-HP(WS-H-R-CURRENT)
@@ -735,7 +735,7 @@
            END-PERFORM.
       ******************************************************************
        PRESS-KEY-TO-CONTINUE.
-           DISPLAY "Pulsa INTRO para continuar ... "
+           DISPLAY "Press ENTER to continue ... "
              LINE 25 COL 1.
            ACCEPT WS-AUX-ALPHA
              LINE 25 COL 36.
@@ -823,7 +823,7 @@
            DISPLAY
            "      8         8       88 88       888       88"
            AT LINE 19 COL 13.
-           DISPLAY "HAS GANADO!"
+           DISPLAY "YOU WIN!!!!"
            AT LINE 22 COL 35.
            PERFORM PRESS-KEY-TO-CONTINUE.
            DISPLAY SS-CLEAR-SCREEN.
@@ -880,7 +880,7 @@
            DISPLAY
            "  Y8888888Y        8        88888888888 88       8b"
            AT LINE 19 COL 13.
-           DISPLAY "HAS PERDIDO!"
+           DISPLAY "YOU LOSE!   "
            AT LINE 22 COL 35.
            PERFORM PRESS-KEY-TO-CONTINUE.
            DISPLAY SS-CLEAR-SCREEN.

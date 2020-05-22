@@ -30,6 +30,6 @@ Winning this game is about setting up the correct attributes of the hero.
 
 While simple, the game is also short and clearly written in COBOL. As such, it is a great tool when learning COBOL programming.
 
-## Spanish Version
+## Versión en español
 
-This is the english branch you are viewing. To get the same program, but written in spanish, please visit the `master` branch of this repo.
+Esta es la sucursal en inglés que estás viendo. Para obtener el mismo programa, pero escrito en español, visite la rama `master` de este repositorio.
